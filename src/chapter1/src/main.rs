@@ -10,9 +10,9 @@ fn search(items: &[i32], value: i32) -> Option<usize> {
 
 fn main() {
     let items = [0, 12, 6, 18, 3, 4];
-    let index1 = find(&items, 6);
+    let index1 = search(&items, 6);
     println!("find({:?}, {}) = {:?}", items, 6, index1);
 
-    let index2 = find(&items, 5);
+    let index2 = search(&items, 5);
     println!("find({:?}, {}) = {:?}", items, 5, index2);
 }
