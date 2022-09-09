@@ -17,9 +17,8 @@ To teach programmers to recognize well known algorithms in the code to understan
 0. [Introduction](book/0.%20introduction/README.md).
 1. Arrays as data structures.
    1. How arrays work.
-   1. Basic operations with arrays: get length, get element by index, set element by index.
    1. Simple search in array.
-   1. Finding minimum and maximum of array.
+   1. Finding minimum of array.
    1. Finding sum and product of elements.
    1. Finding arithmetic mean of elements.
    1. Finding MD5 checksum of byte array.
