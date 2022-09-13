@@ -282,7 +282,7 @@ mod u64_to_bytes_should {
 
 fn mix_next_64_bytes(md5data: &mut MD5Data, bytes: &[u8]) {
     #[macro_export]
-    macro_rules! mix2 {
+    macro_rules! mix {
         ($f: ident, $a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
            md5data.$a = md5data.$b.wrapping_add(md5data.$a.wrapping_add($f(md5data.$b, md5data.$c, md5data.$d))
                                   .wrapping_add(md5data.x[$k])
@@ -294,85 +294,85 @@ fn mix_next_64_bytes(md5data: &mut MD5Data, bytes: &[u8]) {
     decode_bytes(bytes, &mut md5data.x);
     let abcd = get_abcd(&md5data);
 
-    mix2!(f, a, b, c, d,  0,  7, 0xd76aa478);
-    mix2!(f, d, a, b, c,  1, 12, 0xe8c7b756);
-    mix2!(f, c, d, a, b,  2, 17, 0x242070db);
-    mix2!(f, b, c, d, a,  3, 22, 0xc1bdceee);
+    mix!(f, a, b, c, d,  0,  7, 0xd76aa478);
+    mix!(f, d, a, b, c,  1, 12, 0xe8c7b756);
+    mix!(f, c, d, a, b,  2, 17, 0x242070db);
+    mix!(f, b, c, d, a,  3, 22, 0xc1bdceee);
 
-    mix2!(f, a, b, c, d,  4,  7, 0xf57c0faf);
-    mix2!(f, d, a, b, c,  5, 12, 0x4787c62a);
-    mix2!(f, c, d, a, b,  6, 17, 0xa8304613);
-    mix2!(f, b, c, d, a,  7, 22, 0xfd469501);
+    mix!(f, a, b, c, d,  4,  7, 0xf57c0faf);
+    mix!(f, d, a, b, c,  5, 12, 0x4787c62a);
+    mix!(f, c, d, a, b,  6, 17, 0xa8304613);
+    mix!(f, b, c, d, a,  7, 22, 0xfd469501);
 
-    mix2!(f, a, b, c, d,  8,  7, 0x698098d8);
-    mix2!(f, d, a, b, c,  9, 12, 0x8b44f7af);
-    mix2!(f, c, d, a, b, 10, 17, 0xffff5bb1);
-    mix2!(f, b, c, d, a, 11, 22, 0x895cd7be);
+    mix!(f, a, b, c, d,  8,  7, 0x698098d8);
+    mix!(f, d, a, b, c,  9, 12, 0x8b44f7af);
+    mix!(f, c, d, a, b, 10, 17, 0xffff5bb1);
+    mix!(f, b, c, d, a, 11, 22, 0x895cd7be);
 
-    mix2!(f, a, b, c, d, 12,  7, 0x6b901122);
-    mix2!(f, d, a, b, c, 13, 12, 0xfd987193);
-    mix2!(f, c, d, a, b, 14, 17, 0xa679438e);
-    mix2!(f, b, c, d, a, 15, 22, 0x49b40821);
+    mix!(f, a, b, c, d, 12,  7, 0x6b901122);
+    mix!(f, d, a, b, c, 13, 12, 0xfd987193);
+    mix!(f, c, d, a, b, 14, 17, 0xa679438e);
+    mix!(f, b, c, d, a, 15, 22, 0x49b40821);
 
-    mix2!(g, a, b, c, d,  1,  5, 0xf61e2562);
-    mix2!(g, d, a, b, c,  6,  9, 0xc040b340);
-    mix2!(g, c, d, a, b, 11, 14, 0x265e5a51);
-    mix2!(g, b, c, d, a,  0, 20, 0xe9b6c7aa);
+    mix!(g, a, b, c, d,  1,  5, 0xf61e2562);
+    mix!(g, d, a, b, c,  6,  9, 0xc040b340);
+    mix!(g, c, d, a, b, 11, 14, 0x265e5a51);
+    mix!(g, b, c, d, a,  0, 20, 0xe9b6c7aa);
 
-    mix2!(g, a, b, c, d,  5,  5, 0xd62f105d);
-    mix2!(g, d, a, b, c, 10,  9, 0x02441453);
-    mix2!(g, c, d, a, b, 15, 14, 0xd8a1e681);
-    mix2!(g, b, c, d, a,  4, 20, 0xe7d3fbc8);
+    mix!(g, a, b, c, d,  5,  5, 0xd62f105d);
+    mix!(g, d, a, b, c, 10,  9, 0x02441453);
+    mix!(g, c, d, a, b, 15, 14, 0xd8a1e681);
+    mix!(g, b, c, d, a,  4, 20, 0xe7d3fbc8);
 
-    mix2!(g, a, b, c, d,  9,  5, 0x21e1cde6);
-    mix2!(g, d, a, b, c, 14,  9, 0xc33707d6);
-    mix2!(g, c, d, a, b,  3, 14, 0xf4d50d87);
-    mix2!(g, b, c, d, a,  8, 20, 0x455a14ed);
+    mix!(g, a, b, c, d,  9,  5, 0x21e1cde6);
+    mix!(g, d, a, b, c, 14,  9, 0xc33707d6);
+    mix!(g, c, d, a, b,  3, 14, 0xf4d50d87);
+    mix!(g, b, c, d, a,  8, 20, 0x455a14ed);
 
-    mix2!(g, a, b, c, d, 13,  5, 0xa9e3e905);
-    mix2!(g, d, a, b, c,  2,  9, 0xfcefa3f8);
-    mix2!(g, c, d, a, b,  7, 14, 0x676f02d9);
-    mix2!(g, b, c, d, a, 12, 20, 0x8d2a4c8a);
+    mix!(g, a, b, c, d, 13,  5, 0xa9e3e905);
+    mix!(g, d, a, b, c,  2,  9, 0xfcefa3f8);
+    mix!(g, c, d, a, b,  7, 14, 0x676f02d9);
+    mix!(g, b, c, d, a, 12, 20, 0x8d2a4c8a);
 
-    mix2!(h, a, b, c, d,  5,  4, 0xfffa3942);
-    mix2!(h, d, a, b, c,  8, 11, 0x8771f681);
-    mix2!(h, c, d, a, b, 11, 16, 0x6d9d6122);
-    mix2!(h, b, c, d, a, 14, 23, 0xfde5380c);
+    mix!(h, a, b, c, d,  5,  4, 0xfffa3942);
+    mix!(h, d, a, b, c,  8, 11, 0x8771f681);
+    mix!(h, c, d, a, b, 11, 16, 0x6d9d6122);
+    mix!(h, b, c, d, a, 14, 23, 0xfde5380c);
 
-    mix2!(h, a, b, c, d,  1,  4, 0xa4beea44);
-    mix2!(h, d, a, b, c,  4, 11, 0x4bdecfa9);
-    mix2!(h, c, d, a, b,  7, 16, 0xf6bb4b60);
-    mix2!(h, b, c, d, a, 10, 23, 0xbebfbc70);
+    mix!(h, a, b, c, d,  1,  4, 0xa4beea44);
+    mix!(h, d, a, b, c,  4, 11, 0x4bdecfa9);
+    mix!(h, c, d, a, b,  7, 16, 0xf6bb4b60);
+    mix!(h, b, c, d, a, 10, 23, 0xbebfbc70);
 
-    mix2!(h, a, b, c, d, 13,  4, 0x289b7ec6);
-    mix2!(h, d, a, b, c,  0, 11, 0xeaa127fa);
-    mix2!(h, c, d, a, b,  3, 16, 0xd4ef3085);
-    mix2!(h, b, c, d, a,  6, 23, 0x04881d05);
+    mix!(h, a, b, c, d, 13,  4, 0x289b7ec6);
+    mix!(h, d, a, b, c,  0, 11, 0xeaa127fa);
+    mix!(h, c, d, a, b,  3, 16, 0xd4ef3085);
+    mix!(h, b, c, d, a,  6, 23, 0x04881d05);
 
-    mix2!(h, a, b, c, d,  9,  4, 0xd9d4d039);
-    mix2!(h, d, a, b, c, 12, 11, 0xe6db99e5);
-    mix2!(h, c, d, a, b, 15, 16, 0x1fa27cf8);
-    mix2!(h, b, c, d, a,  2, 23, 0xc4ac5665);
+    mix!(h, a, b, c, d,  9,  4, 0xd9d4d039);
+    mix!(h, d, a, b, c, 12, 11, 0xe6db99e5);
+    mix!(h, c, d, a, b, 15, 16, 0x1fa27cf8);
+    mix!(h, b, c, d, a,  2, 23, 0xc4ac5665);
 
-    mix2!(i, a, b, c, d,  0,  6, 0xf4292244);
-    mix2!(i, d, a, b, c,  7, 10, 0x432aff97);
-    mix2!(i, c, d, a, b, 14, 15, 0xab9423a7);
-    mix2!(i, b, c, d, a,  5, 21, 0xfc93a039);
+    mix!(i, a, b, c, d,  0,  6, 0xf4292244);
+    mix!(i, d, a, b, c,  7, 10, 0x432aff97);
+    mix!(i, c, d, a, b, 14, 15, 0xab9423a7);
+    mix!(i, b, c, d, a,  5, 21, 0xfc93a039);
 
-    mix2!(i, a, b, c, d, 12,  6, 0x655b59c3);
-    mix2!(i, d, a, b, c,  3, 10, 0x8f0ccc92);
-    mix2!(i, c, d, a, b, 10, 15, 0xffeff47d);
-    mix2!(i, b, c, d, a,  1, 21, 0x85845dd1);
+    mix!(i, a, b, c, d, 12,  6, 0x655b59c3);
+    mix!(i, d, a, b, c,  3, 10, 0x8f0ccc92);
+    mix!(i, c, d, a, b, 10, 15, 0xffeff47d);
+    mix!(i, b, c, d, a,  1, 21, 0x85845dd1);
 
-    mix2!(i, a, b, c, d,  8,  6, 0x6fa87e4f);
-    mix2!(i, d, a, b, c, 15, 10, 0xfe2ce6e0);
-    mix2!(i, c, d, a, b,  6, 15, 0xa3014314);
-    mix2!(i, b, c, d, a, 13, 21, 0x4e0811a1);
+    mix!(i, a, b, c, d,  8,  6, 0x6fa87e4f);
+    mix!(i, d, a, b, c, 15, 10, 0xfe2ce6e0);
+    mix!(i, c, d, a, b,  6, 15, 0xa3014314);
+    mix!(i, b, c, d, a, 13, 21, 0x4e0811a1);
 
-    mix2!(i, a, b, c, d,  4,  6, 0xf7537e82);
-    mix2!(i, d, a, b, c, 11, 10, 0xbd3af235);
-    mix2!(i, c, d, a, b,  2, 15, 0x2ad7d2bb);
-    mix2!(i, b, c, d, a,  9, 21, 0xeb86d391);
+    mix!(i, a, b, c, d,  4,  6, 0xf7537e82);
+    mix!(i, d, a, b, c, 11, 10, 0xbd3af235);
+    mix!(i, c, d, a, b,  2, 15, 0x2ad7d2bb);
+    mix!(i, b, c, d, a,  9, 21, 0xeb86d391);
 
     wrapping_add_abcd(md5data, abcd);
 }
