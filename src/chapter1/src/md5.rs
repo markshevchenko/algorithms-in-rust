@@ -1,3 +1,7 @@
+use std::mem::{transmute, transmute_copy};
+use std::ops::AddAssign;
+
+// MD5 algorithm has four auxiliary functions — f, g, h, and i, that mix three u32 words.
 fn f(x: u32, y: u32, z: u32) -> u32 {
     x & y | !x & z
 }
@@ -15,14 +19,14 @@ mod f_should {
     // 1 1 1        1
     #[test]
     fn match_truth_table() {
-        assert_eq!(0b0, super::f(0b0, 0b0, 0b0));
-        assert_eq!(0b1, super::f(0b0, 0b0, 0b1));
-        assert_eq!(0b0, super::f(0b0, 0b1, 0b0));
-        assert_eq!(0b1, super::f(0b0, 0b1, 0b1));
-        assert_eq!(0b0, super::f(0b1, 0b0, 0b0));
-        assert_eq!(0b0, super::f(0b1, 0b0, 0b1));
-        assert_eq!(0b1, super::f(0b1, 0b1, 0b0));
-        assert_eq!(0b1, super::f(0b1, 0b1, 0b1));
+        assert_eq!(0x00000000, super::f(0x00000000, 0x00000000, 0x00000000));
+        assert_eq!(0xffffffff, super::f(0x00000000, 0x00000000, 0xffffffff));
+        assert_eq!(0x00000000, super::f(0x00000000, 0xffffffff, 0x00000000));
+        assert_eq!(0xffffffff, super::f(0x00000000, 0xffffffff, 0xffffffff));
+        assert_eq!(0x00000000, super::f(0xffffffff, 0x00000000, 0x00000000));
+        assert_eq!(0x00000000, super::f(0xffffffff, 0x00000000, 0xffffffff));
+        assert_eq!(0xffffffff, super::f(0xffffffff, 0xffffffff, 0x00000000));
+        assert_eq!(0xffffffff, super::f(0xffffffff, 0xffffffff, 0xffffffff));
     }
 }
 
@@ -43,14 +47,14 @@ mod g_should {
     // 1 1 1        1
     #[test]
     fn match_truth_table() {
-        assert_eq!(0b0, super::g(0b0, 0b0, 0b0));
-        assert_eq!(0b0, super::g(0b0, 0b0, 0b1));
-        assert_eq!(0b1, super::g(0b0, 0b1, 0b0));
-        assert_eq!(0b0, super::g(0b0, 0b1, 0b1));
-        assert_eq!(0b0, super::g(0b1, 0b0, 0b0));
-        assert_eq!(0b1, super::g(0b1, 0b0, 0b1));
-        assert_eq!(0b1, super::g(0b1, 0b1, 0b0));
-        assert_eq!(0b1, super::g(0b1, 0b1, 0b1));
+        assert_eq!(0x00000000, super::g(0x00000000, 0x00000000, 0x00000000));
+        assert_eq!(0x00000000, super::g(0x00000000, 0x00000000, 0xffffffff));
+        assert_eq!(0xffffffff, super::g(0x00000000, 0xffffffff, 0x00000000));
+        assert_eq!(0x00000000, super::g(0x00000000, 0xffffffff, 0xffffffff));
+        assert_eq!(0x00000000, super::g(0xffffffff, 0x00000000, 0x00000000));
+        assert_eq!(0xffffffff, super::g(0xffffffff, 0x00000000, 0xffffffff));
+        assert_eq!(0xffffffff, super::g(0xffffffff, 0xffffffff, 0x00000000));
+        assert_eq!(0xffffffff, super::g(0xffffffff, 0xffffffff, 0xffffffff));
     }
 }
 
@@ -71,14 +75,14 @@ mod h_should {
     // 1 1 1      1
     #[test]
     fn match_truth_table() {
-        assert_eq!(0b0, super::h(0b0, 0b0, 0b0));
-        assert_eq!(0b1, super::h(0b0, 0b0, 0b1));
-        assert_eq!(0b1, super::h(0b0, 0b1, 0b0));
-        assert_eq!(0b0, super::h(0b0, 0b1, 0b1));
-        assert_eq!(0b1, super::h(0b1, 0b0, 0b0));
-        assert_eq!(0b0, super::h(0b1, 0b0, 0b1));
-        assert_eq!(0b0, super::h(0b1, 0b1, 0b0));
-        assert_eq!(0b1, super::h(0b1, 0b1, 0b1));
+        assert_eq!(0x00000000, super::h(0x00000000, 0x00000000, 0x00000000));
+        assert_eq!(0xffffffff, super::h(0x00000000, 0x00000000, 0xffffffff));
+        assert_eq!(0xffffffff, super::h(0x00000000, 0xffffffff, 0x00000000));
+        assert_eq!(0x00000000, super::h(0x00000000, 0xffffffff, 0xffffffff));
+        assert_eq!(0xffffffff, super::h(0xffffffff, 0x00000000, 0x00000000));
+        assert_eq!(0x00000000, super::h(0xffffffff, 0x00000000, 0xffffffff));
+        assert_eq!(0x00000000, super::h(0xffffffff, 0xffffffff, 0x00000000));
+        assert_eq!(0xffffffff, super::h(0xffffffff, 0xffffffff, 0xffffffff));
     }
 }
 
@@ -99,200 +103,79 @@ mod i_should {
     // 1 1 1    0
     #[test]
     fn match_truth_table() {
-        assert_eq!(0b1, super::i(0b0, 0b0, 0b0) & 0b1);
-        assert_eq!(0b0, super::i(0b0, 0b0, 0b1) & 0b1);
-        assert_eq!(0b0, super::i(0b0, 0b1, 0b0) & 0b1);
-        assert_eq!(0b1, super::i(0b0, 0b1, 0b1) & 0b1);
-        assert_eq!(0b1, super::i(0b1, 0b0, 0b0) & 0b1);
-        assert_eq!(0b1, super::i(0b1, 0b0, 0b1) & 0b1);
-        assert_eq!(0b0, super::i(0b1, 0b1, 0b0) & 0b1);
-        assert_eq!(0b0, super::i(0b1, 0b1, 0b1) & 0b1);
+        assert_eq!(0xffffffff, super::i(0x00000000, 0x00000000, 0x00000000));
+        assert_eq!(0x00000000, super::i(0x00000000, 0x00000000, 0xffffffff));
+        assert_eq!(0x00000000, super::i(0x00000000, 0xffffffff, 0x00000000));
+        assert_eq!(0xffffffff, super::i(0x00000000, 0xffffffff, 0xffffffff));
+        assert_eq!(0xffffffff, super::i(0xffffffff, 0x00000000, 0x00000000));
+        assert_eq!(0xffffffff, super::i(0xffffffff, 0x00000000, 0xffffffff));
+        assert_eq!(0x00000000, super::i(0xffffffff, 0xffffffff, 0x00000000));
+        assert_eq!(0x00000000, super::i(0xffffffff, 0xffffffff, 0xffffffff));
     }
 }
 
-struct MD5Data {
+/// Contains A, B, C, and D 32-bit words used to compute message digest.
+#[derive(Clone, PartialEq, Debug)]
+struct ABCD {
     pub a: u32,
     pub b: u32,
     pub c: u32,
     pub d: u32,
-    pub x: [u32; 16]
 }
 
-fn decode_bytes(bytes: &[u8], x: &mut [u32]) {
-    if x.len() > usize::MAX/4 {
-        panic!("Too long u32 array to convert from byte array.")
-    }
-
-    if bytes.len() != x.len() * 4 {
-        panic!("Array of u32 must be exactly four times shorter than array of u8.")
-    }
-
-    let mut offset = 0;
-    for i in 0..x.len() {
-        let byte0 = bytes[offset] as u32;
-        let byte1 = bytes[offset + 1] as u32;
-        let byte2 = bytes[offset + 2] as u32;
-        let byte3 = bytes[offset + 3] as u32;
-
-        x[i] = byte0 + (byte1 << 8) + (byte2 << 16) + (byte3 << 24);
-        offset += 4;
+impl AddAssign for ABCD {
+    fn add_assign(&mut self, rhs: Self) {
+        self.a = self.a.wrapping_add(rhs.a);
+        self.b = self.b.wrapping_add(rhs.b);
+        self.c = self.c.wrapping_add(rhs.c);
+        self.d = self.d.wrapping_add(rhs.d);
     }
 }
 
 #[cfg(test)]
-mod decode_bytes_should {
-    use crate::md5::decode_bytes;
-
+mod add_assign_should {
     #[test]
-    #[should_panic(expected = "Array of u32 must be exactly four times shorter than array of u8")]
-    fn panic_when_bytes_remain() {
-        let bytes: Vec<u8> = vec![128, 0, 0];
-        let mut x = [0; 1];
+    fn set_12_14_16_18_when_abcd_is_1_2_3_4_and_rhs_is_11_12_13_14() {
+        let mut abcd = super::ABCD { a: 1, b: 2, c: 3, d: 4 };
 
-        decode_bytes(&bytes, &mut x);
-    }
+        abcd += super::ABCD { a: 11, b: 12, c: 13, d: 14 };
 
-    #[test]
-    fn set_128_when_128_0_0_0() {
-        let bytes: Vec<u8> = vec![128, 0, 0, 0];
-        let mut x = [0; 1];
-
-        decode_bytes(&bytes, &mut x);
-
-        assert_eq!(128, x[0]);
-    }
-
-    #[test]
-    fn set_32768_when_0_128_0_0() {
-        let bytes: Vec<u8> = vec![0, 128, 0, 0];
-        let mut x = [0; 1];
-
-        decode_bytes(&bytes, &mut x);
-
-        // 128 * 256
-        assert_eq!(32768, x[0]);
-    }
-
-    #[test]
-    fn set_8388608_when_0_0_128_0() {
-        let bytes: Vec<u8> = vec![0, 0, 128, 0];
-        let mut x = [0; 1];
-
-        decode_bytes(&bytes, &mut x);
-
-        // 128 * 256 * 256
-        assert_eq!(8388608, x[0]);
-    }
-
-    #[test]
-    fn set_2147483648_when_0_0_0_128() {
-        let bytes: Vec<u8> = vec![0, 0, 0, 128];
-        let mut x = [0; 1];
-
-        decode_bytes(&bytes, &mut x);
-
-        // 128 * 256 * 256 * 256
-        assert_eq!(2147483648, x[0]);
+        assert_eq!(super::ABCD { a: 12, b: 14, c: 16, d: 18}, abcd);
     }
 }
 
-fn get_abcd(md5data: &MD5Data) -> (u32, u32, u32, u32) {
-    (md5data.a, md5data.b, md5data.c, md5data.d)
+impl From<ABCD> for (u32, u32, u32, u32) {
+    fn from(abcd: ABCD) -> Self {
+        (abcd.a.swap_bytes(), abcd.b.swap_bytes(), abcd.c.swap_bytes(), abcd.d.swap_bytes())
+    }
 }
 
 #[cfg(test)]
-mod get_abcd_should {
-    #[test]
-    fn return_1_2_3_4_when_md5data_contains_1_2_3_4() {
-        let md5data = super::MD5Data { a: 1, b: 2, c: 3, d: 4, x: [0; 16] };
-
-        let actual = super::get_abcd(&md5data);
-
-        assert_eq!((1, 2, 3, 4), actual);
-    }
-}
-
-fn wrapping_add_abcd(md5data: &mut MD5Data, buffer: (u32, u32, u32, u32)) {
-    md5data.a = md5data.a.wrapping_add(buffer.0);
-    md5data.b = md5data.b.wrapping_add(buffer.1);
-    md5data.c = md5data.c.wrapping_add(buffer.2);
-    md5data.d = md5data.d.wrapping_add(buffer.3);
-}
-
-#[cfg(test)]
-mod wrapping_add_abcd_should {
-    #[test]
-    fn set_12_14_16_18_when_md5data_is_1_2_3_4_and_buffer_is_11_12_13_14() {
-        let mut md5data = super::MD5Data { a: 1, b: 2, c: 3, d: 4, x: [0; 16] };
-
-        super::wrapping_add_abcd(&mut md5data, (11, 12, 13, 14));
-
-        assert_eq!(12, md5data.a);
-        assert_eq!(14, md5data.b);
-        assert_eq!(16, md5data.c);
-        assert_eq!(18, md5data.d);
-    }
-}
-
-fn get_result(md5data: &MD5Data) -> (u32, u32, u32, u32) {
-    (md5data.a.swap_bytes(),
-     md5data.b.swap_bytes(),
-     md5data.c.swap_bytes(),
-     md5data.d.swap_bytes())
-}
-
-#[cfg(test)]
-mod get_result_should
+mod from_should
 {
     #[test]
     fn return_swapped_values_of_abcd() {
-        let md5data = super::MD5Data { a: 1, b: 2, c: 3, d: 4, x: [0; 16] };
+        let actual = <(u32, u32, u32, u32)>::from(super::ABCD { a: 1, b: 2, c: 3, d: 4 });
 
-        let actual = super::get_result(&md5data);
-
-        assert_eq!(1u32.swap_bytes(), actual.0);
-        assert_eq!(2u32.swap_bytes(), actual.1);
-        assert_eq!(3u32.swap_bytes(), actual.2);
-        assert_eq!(4u32.swap_bytes(), actual.3);
+        assert_eq!((1u32 << 24, 2u32 << 24, 3u32 << 24, 4u32 << 24), actual);
     }
 }
 
-fn u64_to_bytes(value: u64) -> [u8; 8] {
-    // unsafe { std::mem::transmute(value) }
-    [value as u8, (value >> 8) as u8, (value >> 16) as u8, (value >> 24) as u8,
-        (value >> 32) as u8, (value >> 40) as u8, (value >> 48) as u8, (value >> 56) as u8]
-}
+fn mix_next_64_bytes(abcd: &mut ABCD, bytes: &[u8]) {
+    debug_assert!(bytes.len() == 64);
+    let x = unsafe { transmute_copy::<&[u8], &[u32]>(&bytes) };
 
-#[cfg(test)]
-mod u64_to_bytes_should {
-    #[test]
-    fn return_128_0_0_0_0_0_0_0_when_value_128() {
-        let actual = super::u64_to_bytes(128);
-
-        assert_eq!([128, 0, 0, 0, 0, 0, 0, 0], actual);
-    }
-
-    #[test]
-    fn return_0_128_0_0_0_0_0_0_when_value_32768() {
-        let actual = super::u64_to_bytes(32768);
-
-        assert_eq!([0, 128, 0, 0, 0, 0, 0, 0], actual);
-    }
-}
-
-fn mix_next_64_bytes(md5data: &mut MD5Data, bytes: &[u8]) {
     #[macro_export]
     macro_rules! mix {
         ($f: ident, $a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           md5data.$a = md5data.$b.wrapping_add(md5data.$a.wrapping_add($f(md5data.$b, md5data.$c, md5data.$d))
-                                  .wrapping_add(md5data.x[$k])
+           abcd.$a = abcd.$b.wrapping_add(abcd.$a.wrapping_add($f(abcd.$b, abcd.$c, abcd.$d))
+                                  .wrapping_add(x[$k])
                                   .wrapping_add($t_i)
                                   .rotate_left($s));
         };
     }
 
-    decode_bytes(bytes, &mut md5data.x);
-    let abcd = get_abcd(&md5data);
+    let previous_abcd = abcd.clone();
 
     mix!(f, a, b, c, d,  0,  7, 0xd76aa478);
     mix!(f, d, a, b, c,  1, 12, 0xe8c7b756);
@@ -374,23 +257,22 @@ fn mix_next_64_bytes(md5data: &mut MD5Data, bytes: &[u8]) {
     mix!(i, c, d, a, b,  2, 15, 0x2ad7d2bb);
     mix!(i, b, c, d, a,  9, 21, 0xeb86d391);
 
-    wrapping_add_abcd(md5data, abcd);
+    *abcd += previous_abcd;
 }
 
 pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
-    let mut md5data = MD5Data {
+    let mut abcd = ABCD {
         a: 0x67452301u32,
         b: 0xefcdab89u32,
         c: 0x98badcfeu32,
         d: 0x10325476u32,
-        x: [0; 16]
     };
 
     for block in bytes.chunks_exact(64) {
-        mix_next_64_bytes(&mut md5data, block);
+        mix_next_64_bytes(&mut abcd, block);
     }
 
-    let bit_length = u64_to_bytes(bytes.len() as u64 * 8);
+    let bit_length = unsafe { transmute::<u64, [u8; 8]>(bytes.len() as u64 * 8) };
     let tail_block = bytes.chunks_exact(64).remainder();
     let tail_block_length = tail_block.len();
 
@@ -401,7 +283,7 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
         last_block[tail_block_length + 1..56].fill(0);
         last_block[56..].clone_from_slice(&bit_length);
 
-        mix_next_64_bytes(&mut md5data, &last_block);
+        mix_next_64_bytes(&mut abcd, &last_block);
     } else {
         let mut last_block = [0u8; 128];
         last_block[..tail_block_length].clone_from_slice(tail_block);
@@ -409,11 +291,11 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
         last_block[tail_block_length + 1..120].fill(0);
         last_block[120..].clone_from_slice(&bit_length);
 
-        mix_next_64_bytes(&mut md5data, &last_block[..64]);
-        mix_next_64_bytes(&mut md5data, &last_block[64..]);
+        mix_next_64_bytes(&mut abcd, &last_block[..64]);
+        mix_next_64_bytes(&mut abcd, &last_block[64..]);
     }
 
-    get_result(&md5data)
+    abcd.into()
 }
 
 #[cfg(test)]
