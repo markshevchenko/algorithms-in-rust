@@ -1,5 +1,4 @@
 extern crate num_traits;
-extern crate core;
 
 fn search(items: &[i32], value: i32) -> Option<usize> {
     for i in 0..items.len() {
