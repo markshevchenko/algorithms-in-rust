@@ -29,7 +29,7 @@ mod search_should {
 }
 
 fn contains(items: &[i32], value: i32) -> bool {
-    for item in items.iter() {
+    for item in items.into_iter() {
         if *item == value {
             return true
         }
