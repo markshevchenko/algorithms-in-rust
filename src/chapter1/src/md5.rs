@@ -262,10 +262,10 @@ fn mix_next_64_bytes(abcd: &mut ABCD, bytes: &[u8]) {
 
 pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
     let mut abcd = ABCD {
-        a: 0x67452301u32,
-        b: 0xefcdab89u32,
-        c: 0x98badcfeu32,
-        d: 0x10325476u32,
+        a: 0x67452301,
+        b: 0xefcdab89,
+        c: 0x98badcfe,
+        d: 0x10325476,
     };
 
     for block in bytes.chunks_exact(64) {

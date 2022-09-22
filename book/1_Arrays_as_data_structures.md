@@ -205,7 +205,7 @@ fn prod(items: &[i32]) -> i32 {
 }
 ```
 
-Rust is the strongly typed language, so we need to have different functions to summarize integer and float nubmers.
+Rust is the strongly typed language, so we need to have different functions to summarize integer and float numbers.
 
 Fortunately, Rust supports generic types and special traits to summarize everything that can be added.
 
@@ -258,5 +258,53 @@ We need to cast the count of elements `items.len()` from the type `usize` to the
 Otherwise the code is simple enough.
 
 ## Finding MD5 checksum of byte array
+
+Let's imagine that you've downloaded a very big file from the internet. You want check if the file has corrupted during the download. How can you check it?
+
+One of the simplest and fastest way is the comparing of *checksums* or *signatures*. Checksums are short numbers simple to compare. They are calculated by mixing all bytes of the source file.
+
+Author of the file can calcualte its signature and publish it together with the link. After the downloading you also calculate your signature and compare it with the original value.
+
+Equality of signatures mean equality of files. Or maybe not.
+
+Because signatures are more shorter than source files sometimes they can be the same even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128 bits instead of 32 bits. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
+
+Nowdays MD5 considered not so reliable method. But it's well-known and it's enough simple to learn how to implement such kind of algorithms.
+
+### The buffer
+
+MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `A`, `B`, `C`, and `D`.
+
+Their initial values are (lowest byte first):
+
+|-----------------|
+| A | 01 23 45 67 |
+| B | 08 ab cd ef |
+| C | fe dc ba 98 |
+| D | 76 54 32 10 |
+|-----------------|
+
+Inside most modern computers numbers are stored in reverse order, highest byte first. So we need reverse each pair of heximal digits while initializing.
+
+```rust
+struct ABCD {
+    pub a: u32,
+    pub b: u32,
+    pub c: u32,
+    pub d: u32,
+}
+
+pub fn md5(bytes: &[u8]) -> ABCD {
+    let abcd = ABCD {
+        a: 0x67452301,
+        b: 0xefcdab89,
+        c: 0x98badcfe,
+        d: 0x10325476,
+    };
+
+    abcd
+}
+```
+
 
 ## Binary search in array
