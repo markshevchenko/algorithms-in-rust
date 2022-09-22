@@ -276,15 +276,14 @@ Nowdays MD5 considered not so reliable method. But it's well-known and it's enou
 MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `A`, `B`, `C`, and `D`.
 
 Their initial values are (lowest byte first):
+| Variable | Initial Value |
+|:------------------------:|
+|    A     |   01 23 45 67 |
+|    B     |   08 ab cd ef |
+|    C     |   fe dc ba 98 |
+|    D     |   76 54 32 10 |
 
-|-----------------|
-| A | 01 23 45 67 |
-| B | 08 ab cd ef |
-| C | fe dc ba 98 |
-| D | 76 54 32 10 |
-|-----------------|
-
-Inside most modern computers numbers are stored in reverse order, highest byte first. So we need reverse each pair of heximal digits while initializing.
+Inside most modern computers numbers are stored in reverse order, highest byte first. So we need reverse bytes while initializing.
 
 ```rust
 struct ABCD {
