@@ -276,6 +276,7 @@ Nowdays MD5 considered not so reliable method. But it's well-known and it's enou
 MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `A`, `B`, `C`, and `D`.
 
 Their initial values are (lowest byte first):
+
 | Variable | Initial Value |
 |:------------------------:|
 |    A     |   01 23 45 67 |
