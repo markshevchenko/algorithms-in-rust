@@ -16,25 +16,25 @@ The variable `items` has the type `[i32, 7]` that means 7 elements of the `i32` 
 
 What can we do with arrays?
 
-Firstly, we can detect the length (the count of elements) of array with the help of the `len()` method.
+Firstly, we can detect the length (the count of items) of array with the help of the `len()` method.
 
 ```rust
 println!{"{}", items.len()}; // => 7
 ```
 
-Secondly, we can get elements by their non-negative index.
+Secondly, we can get the item by its non-negative index.
 
 ```rust
 println!("{}", items[2]); // => 4
 ```
 
-As in the C and many other inheritors of C, first element of an array has the index 0.
+As in the C and many other inheritors of C, the first item of the array has the index 0.
 
 ```rust
 println!("{}", items[0]); // => 3
 ```
 
-Thirdly, we can set elements by index, but the array should be mutable.
+Thirdly, we can set the item by its index, but the array should be mutable.
 
 ```rust
 let mut items = vec![2, 7, 1, 8, 2, 8, 1, 8, 2, 8];
@@ -53,7 +53,7 @@ So, let see some simple algorithms that work for arrays.
 
 The `search` function looks for the specified item in the array. If the item has found, the function should return the index of the found item.
 
-In languages such C, Java, or C# the function will return -1 (non-valid index value) to show that the item hasn't found. But Rust has special type for this — `Option`. Our function will return `None`, if the item hasn't found, or `Some` index, if it has found.
+In languages such C, Java, or C# the function will return -1 (non-valid index value) to show that the item hasn't found. But Rust has the special type `Option` for this. Our function will return `None`, if the item hasn't found, or `Some` index, if it has found.
 
 ```rust
 fn search(items: &[i32], value: i32) -> Option<usize> {
@@ -69,11 +69,11 @@ fn search(items: &[i32], value: i32) -> Option<usize> {
 
 The construction `i in 0..items.len()` means that the `i` variable will get all values from 0 till `items.len()` excluding `items.len()`. So, if the array has 7 elements, `i` will get values 0, 1, 2, 3, 4, 5, and 6, but not 7!
 
-Here we see most popular method to work with arrays since good old C times. We have the `for` loop with the variable `i`, that we use to access to elements.
+Here we see most popular method to work with arrays since good old C times. We have the `for` loop with the variable `i`, that we use to access to items.
 
-But if we don't need the index, we can iterate though the elements using an *iterator*.
+But if we don't need the index, we can iterate though the items using an *iterator*.
 
-Let's compare `search` and `contains` functions. The `contains` detects if the array has specified element — yes or no. Because we don't need the index, we can skip `i` variable and use values from the array directly.
+Let's compare `search` and `contains` functions. The `contains` detects if the array has the specified vlaue — yes or no. Because we don't need the index, we can skip `i` variable and check items of the array directly.
 
 ```rust
 fn contains(items: &[i32], value: i32) -> bool {
@@ -87,9 +87,9 @@ fn contains(items: &[i32], value: i32) -> bool {
 }
 ```
 
-As you have possibly noticed, inside the `for` loop we use the *star* operator to get access to elements. It's because the iterator returns references to elements instead of elements themselves.
+As you have possibly noticed, we use the *star* operator to get access to items inside the `for` loop. It's because the iterator returns references to items instead of items themselves.
 
-If you're not familiar with references you can skip theese details now. We will return to refernces in the Chapter 5.
+If you're not familiar with references you can skip theese details now. We will return to the topic in the Chapter 5.
 
 What we should understand — iterators hide details of implementation. We can use them with all collection types like lists, sets, and arrays of course.
 
@@ -97,9 +97,9 @@ What we should understand — iterators hide details of implementation. We can 
 
 We have seen two algorithms that iterate through entrire array. But sometimes we need proceed *specific cases*.
 
-For example we can specificly proceed a first or a last element of an array. Implementing the `min` function we compare each next item with the current minimum value, but we haven't this value for the first element of array.
+For example we can specificly proceed a first or a last item of an array. Implementing the `min` function we compare each next item with the current minimum value, but we haven't this value for the first item of the array.
 
-If the array has only one element then this element becomes the result of the `min` function.
+If the array has only one item, it becomes the result of the `min` function.
 
 So we can write something like this.
 
@@ -120,9 +120,9 @@ fn min(items: &[i32]) -> Option<i32> {
 }
 ```
 
-We store first element into the `result` variable and then proceed all remaining items as usually.
+We store the first item in the `result` variable and then proceed all remaining items as usually.
 
-Chaning the only character (`<` to `>`) we can turn `min` to `max` function.
+Chaning the only character (`<` to `>`) we can turn `min` function to `max`.
 
 ```rust
 fn max(items: &[i32]) -> Option<i32> {
@@ -141,7 +141,7 @@ fn max(items: &[i32]) -> Option<i32> {
 }
 ```
 
-## Finding sum and product of elements
+## Finding sum and product of items
 
 Unlike `min` function, `sum` and `product` are always have a result. It seems surpising because what can be the sum of the empty array?
 
@@ -166,15 +166,19 @@ $$
 This formula helps us to find marginal values $s_1$ and $s_0$.
 
 $$
+\displaylines{
 s_1 = a_1 \\
 s_0 = 0
+}
 $$
 
 Thinking same way we can find values $p_1$ and $p_0$ where $p_n$ is the product of $n$ numbers.
 
 $$
+\displaylines{
 p_1 = a_1 \\
 p_0 = 1
+}
 $$
 
 Now we can calculate the sum and the product of array items.
@@ -233,7 +237,7 @@ where T: Copy + AddAssign + Zero {
 
 The `product` function can be coded the same way, but you need to use `MulAssign` and `One` traits.
 
-## Finding arithmetic mean of elements
+## Finding arithmetic mean of items
 
 Like `min` and `max` functions the `average` can't handle empty arrays, so it should return an optional value.
 
