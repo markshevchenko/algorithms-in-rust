@@ -279,10 +279,10 @@ Their initial values are (lowest byte first):
 
 | Variable | Initial Value |
 |:---------|--------------:|
-|    A     |   01 23 45 67 |
-|    B     |   08 ab cd ef |
-|    C     |   fe dc ba 98 |
-|    D     |   76 54 32 10 |
+|   `A`    | `01 23 45 67` |
+|   `B`    | `08 ab cd ef` |
+|   `C`    | `fe dc ba 98` |
+|   `D`    | `76 54 32 10` |
 
 Inside most modern computers numbers are stored in reverse order, highest byte first. So we need reverse bytes while initializing.
 
