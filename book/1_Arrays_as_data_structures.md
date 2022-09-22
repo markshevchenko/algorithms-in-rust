@@ -278,7 +278,7 @@ MD5 signature (or *digest*) is the 128 bits value. We can represent it in differ
 Their initial values are (lowest byte first):
 
 | Variable | Initial Value |
-|:------------------------:|
+|:---------|--------------:|
 |    A     |   01 23 45 67 |
 |    B     |   08 ab cd ef |
 |    C     |   fe dc ba 98 |
