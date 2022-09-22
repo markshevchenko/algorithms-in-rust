@@ -143,7 +143,115 @@ fn max(items: &[i32]) -> Option<i32> {
 
 ## Finding sum and product of elements
 
+Unlike `min` function, `sum` and `product` are always have a result. It seems surpising because what can be the sum of the empty array?
+
+Let $s_n$ is the sum of numbers $a_1$, $a_2$, ..., $a_n$.
+
+$$
+s_n = a_1 + a_2 + \cdots + a_n
+$$
+
+The sum of numbers $a_1$, ..., $a_{n + 1}$ will be:
+
+$$
+s_{n + 1} = a_1 + a_2 + \cdots + a_n + a_{n + 1} = s_n + a_{n + 1}
+$$
+
+It means that:
+
+$$
+s_n = s_{n + 1} - a_{n + 1}
+$$
+
+This formula helps us to find marginal values $s_1$ and $s_0$.
+
+$$
+s_1 = a_1 \\
+s_0 = 0
+$$
+
+Thinking same way we can find values $p_1$ and $p_0$ where $p_n$ is the product of $n$ numbers.
+
+$$
+p_1 = a_1 \\
+p_0 = 1
+$$
+
+Now we can calculate the sum and the product of array items.
+
+```rust
+fn sum(items: &[i32]) -> i32 {
+    let mut result = 0;
+
+    for item in items.iter() {
+        result += *item
+    }
+
+    result
+}
+
+fn prod(items: &[i32]) -> i32 {
+    let mut result = 1;
+
+    for item in items.iter() {
+        result *= *item
+    }
+
+    result
+}
+```
+
+Rust is the strongly typed language, so we need to have different functions to summarize integer and float nubmers.
+
+Fortunately, Rust supports generic types and special traits to summarize everything that can be added.
+
+First we need to append crates `num` and `num-traits` to the **Cargo.toml** file.
+
+```ini
+[dependencies]
+num = "0.4.0"
+num-traits = "0.2.14"
+```
+
+Then we should use traits `AddAssing` and `Zero` to make generic version of the `sum` function.
+
+```rust
+use std::ops::AddAssign;
+use num::traits::Zero;
+
+fn sum<T>(items: &[T]) -> T
+where T: Copy + AddAssign + Zero {
+    let mut result: T = Zero::zero();
+
+    for item in items.iter() {
+        result.add_assign(*item);
+    }
+
+    result
+}
+```
+
+The `product` function can be coded the same way, but you need to use `MulAssign` and `One` traits.
+
 ## Finding arithmetic mean of elements
+
+Like `min` and `max` functions the `average` can't handle empty arrays, so it should return an optional value.
+
+We can simplify the code using the `sum` function that we have made already.
+
+```rust
+fn average(items: &[f64]) -> Option<f64> {
+    if items.is_empty() {
+        None
+    } else {
+        Some(sum(&items) / items.len() as f64)
+    }
+}
+```
+
+We need to cast the count of elements `items.len()` from the type `usize` to the type `f64`, because we can't divide a float value by an integer value. Remember: Rust is the strongly typed language.
+
+Otherwise the code is simple enough.
 
 ## Finding MD5 checksum of byte array
 

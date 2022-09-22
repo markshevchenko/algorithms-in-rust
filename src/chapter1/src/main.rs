@@ -97,7 +97,7 @@ fn sum<T>(items: &[T]) -> T
 where T: Copy + AddAssign + Zero {
     let mut result: T = Zero::zero();
 
-    for item in items.iter() {
+    for item in items.into_iter() {
         result.add_assign(*item);
     }
 
