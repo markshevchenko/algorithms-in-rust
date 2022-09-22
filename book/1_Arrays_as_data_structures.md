@@ -1,4 +1,6 @@
-# How arryas work
+# Arrays as data structures
+
+## How arryas work
 
 Arrays are one of most known data structures. Moreover they are simple enough. So, arrays are frequently used as a base data structure for different algorithms.
 
@@ -71,7 +73,7 @@ Here we see most popular method to work with arrays since good old C times. We h
 
 But if we don't need the index, we can iterate though the elements using an *iterator*.
 
-Let compare `search` and `contains` functions. The `contains` detects if the array has specified element — yes or no. Because we don't need the index, we can skip `i` variable and use values from the array directly.
+Let's compare `search` and `contains` functions. The `contains` detects if the array has specified element — yes or no. Because we don't need the index, we can skip `i` variable and use values from the array directly.
 
 ```rust
 fn contains(items: &[i32], value: i32) -> bool {
@@ -87,7 +89,7 @@ fn contains(items: &[i32], value: i32) -> bool {
 
 As you have possibly noticed, inside the `for` loop we use the *star* operator to get access to elements. It's because the iterator returns references to elements instead of elements themselves.
 
-If you're not familiary with references you can skip theese details now. We will return to refernces in the Chapter 5.
+If you're not familiar with references you can skip theese details now. We will return to refernces in the Chapter 5.
 
 What we should understand — iterators hide details of implementation. We can use them with all collection types like lists, sets, and arrays of course.
 
@@ -138,3 +140,11 @@ fn max(items: &[i32]) -> Option<i32> {
     Some(result)
 }
 ```
+
+## Finding sum and product of elements
+
+## Finding arithmetic mean of elements
+
+## Finding MD5 checksum of byte array
+
+## Binary search in array

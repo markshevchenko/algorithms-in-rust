@@ -15,14 +15,14 @@ To teach programmers to recognize well known algorithms in the code to understan
 ## Content
 
 0. [Introduction](book/0.%20introduction/README.md)
-1. Arrays as data structures
-   1. How arrays work
-   1. Simple search in array
-   1. Finding minimum of array
-   1. Finding sum and product of elements
-   1. Finding arithmetic mean of elements
-   1. Finding MD5 checksum of byte array
-   1. Binary search in array (iterative)
+1. [Arrays as data structures](book/1_Arrays_as_data_structures.md)
+   1. [How arrays work](book/1_Arrays_as_data_structures.md#how-arryas-work)
+   1. [Simple search in array](book/1_Arrays_as_data_structures.md#simple-search-in-array)
+   1. [Finding minimum of array](book/1_Arrays_as_data_structures.md#finding-minimum-of-array)
+   1. [Finding sum and product of elements](book/1_Arrays_as_data_structures.md#finding-sum-and-product-of-elements)
+   1. [Finding arithmetic mean of elements](book/1_Arrays_as_data_structures.md#finding-arithmetic-mean-of-elements)
+   1. [Finding MD5 checksum of byte array](book/1_Arrays_as_data_structures.md#finding-md5-checksum-of-byte-array)
+   1. [Binary search in array](book/1_Arrays_as_data_structures.md#binary-search-in-array)
 2. Recursion
    1. Introduction
    1. Recursive binary search
