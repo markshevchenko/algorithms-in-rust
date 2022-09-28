@@ -92,6 +92,7 @@ mod min_should {
 
 use std::ops::AddAssign;
 use num::traits::Zero;
+use num_traits::ToPrimitive;
 
 fn sum<T>(items: &[T]) -> T
 where T: Copy + AddAssign + Zero {
@@ -225,6 +226,17 @@ mod binary_search_should {
     }
 }
 
+fn calculate_t() -> [u32; 65] {
+    let mut result = [0; 65];
+
+    for i in 0..65 {
+        let f = i.to_f64().unwrap();
+        result[i] = (f.sin().abs() * 4294967296.0).to_u32().unwrap();
+    }
+
+    result
+}
+
 fn main() {
     let empty = [0; 0];
     let items = [0, 12, 6, 18, 3, 4];
@@ -250,6 +262,16 @@ fn main() {
     println!("average({:?}) = {:?}", empty_float, average(&empty_float));
     println!("average({:?}) = {:?}", float_items, average(&float_items));
 
+    print!("T");
+    for t in calculate_t() {
+        print!(" {:#10x}", t);
+    }
+    println!();
+
     let (a, b, c, d) = md5::md5(&vec![]);
     println!("md5([]) = {:08x}-{:08x}-{:08x}-{:08x}", a, b, c, d);
+
+    let ordered_items = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
+    println!("binary_search({:?}, {}) = {:?}", ordered_items, 11, binary_search(&ordered_items, 11));
+    println!("binary_search({:?}, {}) = {:?}", ordered_items, 12, binary_search(&ordered_items, 12));
 }

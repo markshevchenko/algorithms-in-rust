@@ -1,4 +1,4 @@
-use std::mem::{transmute, transmute_copy};
+use std::mem::{transmute};
 use std::ops::AddAssign;
 
 // MD5 algorithm has four auxiliary functions — f, g, h, and i, that mix three u32 words.
@@ -116,14 +116,14 @@ mod i_should {
 
 /// Contains A, B, C, and D 32-bit words used to compute message digest.
 #[derive(Clone, PartialEq, Debug)]
-struct ABCD {
+struct Digest {
     pub a: u32,
     pub b: u32,
     pub c: u32,
     pub d: u32,
 }
 
-impl AddAssign for ABCD {
+impl AddAssign for Digest {
     fn add_assign(&mut self, rhs: Self) {
         self.a = self.a.wrapping_add(rhs.a);
         self.b = self.b.wrapping_add(rhs.b);
@@ -136,17 +136,17 @@ impl AddAssign for ABCD {
 mod add_assign_should {
     #[test]
     fn set_12_14_16_18_when_abcd_is_1_2_3_4_and_rhs_is_11_12_13_14() {
-        let mut abcd = super::ABCD { a: 1, b: 2, c: 3, d: 4 };
+        let mut digest = super::Digest { a: 1, b: 2, c: 3, d: 4 };
 
-        abcd += super::ABCD { a: 11, b: 12, c: 13, d: 14 };
+        digest += super::Digest { a: 11, b: 12, c: 13, d: 14 };
 
-        assert_eq!(super::ABCD { a: 12, b: 14, c: 16, d: 18}, abcd);
+        assert_eq!(super::Digest { a: 12, b: 14, c: 16, d: 18}, digest);
     }
 }
 
-impl From<ABCD> for (u32, u32, u32, u32) {
-    fn from(abcd: ABCD) -> Self {
-        (abcd.a.swap_bytes(), abcd.b.swap_bytes(), abcd.c.swap_bytes(), abcd.d.swap_bytes())
+impl From<Digest> for (u32, u32, u32, u32) {
+    fn from(digest: Digest) -> Self {
+        (digest.a.swap_bytes(), digest.b.swap_bytes(), digest.c.swap_bytes(), digest.d.swap_bytes())
     }
 }
 
@@ -154,28 +154,23 @@ impl From<ABCD> for (u32, u32, u32, u32) {
 mod from_should
 {
     #[test]
-    fn return_swapped_values_of_abcd() {
-        let actual = <(u32, u32, u32, u32)>::from(super::ABCD { a: 1, b: 2, c: 3, d: 4 });
+    fn return_swapped_values_of_digest() {
+        let actual = <(u32, u32, u32, u32)>::from(super::Digest { a: 1, b: 2, c: 3, d: 4 });
 
         assert_eq!((1u32 << 24, 2u32 << 24, 3u32 << 24, 4u32 << 24), actual);
     }
 }
 
-fn mix_next_64_bytes(abcd: &mut ABCD, bytes: &[u8]) {
-    debug_assert!(bytes.len() == 64);
-    let x = unsafe { transmute_copy::<&[u8], &[u32]>(&bytes) };
-
+fn mix_words(_digest: &mut Digest, _x: &[u32]) {
     #[macro_export]
     macro_rules! mix {
         ($f: ident, $a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           abcd.$a = abcd.$b.wrapping_add(abcd.$a.wrapping_add($f(abcd.$b, abcd.$c, abcd.$d))
-                                  .wrapping_add(x[$k])
-                                  .wrapping_add($t_i)
-                                  .rotate_left($s));
+           _digest.$a = _digest.$b.wrapping_add(_digest.$a.wrapping_add($f(_digest.$b, _digest.$c, _digest.$d))
+                                                          .wrapping_add(_x[$k])
+                                                          .wrapping_add($t_i)
+                                                          .rotate_left($s));
         };
     }
-
-    let previous_abcd = abcd.clone();
 
     mix!(f, a, b, c, d,  0,  7, 0xd76aa478);
     mix!(f, d, a, b, c,  1, 12, 0xe8c7b756);
@@ -256,12 +251,51 @@ fn mix_next_64_bytes(abcd: &mut ABCD, bytes: &[u8]) {
     mix!(i, d, a, b, c, 11, 10, 0xbd3af235);
     mix!(i, c, d, a, b,  2, 15, 0x2ad7d2bb);
     mix!(i, b, c, d, a,  9, 21, 0xeb86d391);
+}
 
-    *abcd += previous_abcd;
+fn as_u32(byte1: u8, byte2: u8, byte3: u8, byte4: u8) -> u32 {
+    byte1 as u32 + ((byte2 as u32) << 8) + ((byte3 as u32) << 16) + ((byte4 as u32) << 24)
+}
+
+fn convert_bytes_to_words(bytes: &[u8]) -> Vec<u32> {
+    const U32_SIZE: usize = std::mem::size_of::<u32>();
+    debug_assert!(bytes.len() % U32_SIZE == 0);
+
+    let mut result = Vec::with_capacity(bytes.len() / U32_SIZE);
+    for i in 0..bytes.len() / U32_SIZE {
+        result.push(as_u32(bytes[U32_SIZE * i], bytes[U32_SIZE * i + 1],
+                        bytes[U32_SIZE * i + 2], bytes[U32_SIZE * i + 3]));
+    }
+
+    result
+}
+
+#[cfg(test)]
+mod convert_bytes_to_word_should {
+    use crate::md5::convert_bytes_to_words;
+
+    #[test]
+    fn return_04030201_when_bytes_are_01_02_03_04() {
+        let actual = convert_bytes_to_words(&[0x01, 0x02, 0x03, 0x04]);
+
+        assert_eq!(vec![0x04030201], actual);
+    }
+}
+
+fn mix_chunk(digest: &mut Digest, bytes: &[u8]) {
+    debug_assert!(bytes.len() == 64);
+//    let x = unsafe { std::mem::transmute_copy::<&[u8], &[u32]>(&bytes) };
+    let x = convert_bytes_to_words(bytes);
+
+    let previous_digest = digest.clone();
+
+    mix_words(digest, &x);
+
+    *digest += previous_digest;
 }
 
 pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
-    let mut abcd = ABCD {
+    let mut digest = Digest {
         a: 0x67452301,
         b: 0xefcdab89,
         c: 0x98badcfe,
@@ -269,7 +303,7 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
     };
 
     for block in bytes.chunks_exact(64) {
-        mix_next_64_bytes(&mut abcd, block);
+        mix_chunk(&mut digest, block);
     }
 
     let bit_length = unsafe { transmute::<u64, [u8; 8]>(bytes.len() as u64 * 8) };
@@ -283,7 +317,7 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
         last_block[tail_block_length + 1..56].fill(0);
         last_block[56..].clone_from_slice(&bit_length);
 
-        mix_next_64_bytes(&mut abcd, &last_block);
+        mix_chunk(&mut digest, &last_block);
     } else {
         let mut last_block = [0u8; 128];
         last_block[..tail_block_length].clone_from_slice(tail_block);
@@ -291,11 +325,11 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
         last_block[tail_block_length + 1..120].fill(0);
         last_block[120..].clone_from_slice(&bit_length);
 
-        mix_next_64_bytes(&mut abcd, &last_block[..64]);
-        mix_next_64_bytes(&mut abcd, &last_block[64..]);
+        mix_chunk(&mut digest, &last_block[..64]);
+        mix_chunk(&mut digest, &last_block[64..]);
     }
 
-    abcd.into()
+    digest.into()
 }
 
 #[cfg(test)]
