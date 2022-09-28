@@ -259,7 +259,7 @@ Otherwise the code is simple enough.
 
 ## Finding MD5 checksum of byte array
 
-Let's imagine that you've downloaded a very big file from the internet. You want check if the file has corrupted during the download. How can you check it?
+Let's imagine that you've downloaded a very big file from the internet. You want check if the file hasn't corrupted during the download. How can you check it?
 
 One of the simplest and fastest way is the comparing of *checksums* or *signatures*. Checksums are short numbers simple to compare. They are calculated by mixing all bytes of the source file.
 
@@ -267,44 +267,137 @@ Author of the file can calcualte its signature and publish it together with the 
 
 Equality of signatures mean equality of files. Or maybe not.
 
-Because signatures are more shorter than source files sometimes they can be the same even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128 bits instead of 32 bits. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
+Because signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128-bit instead of 32-bit. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
 
 Nowdays MD5 considered not so reliable method. But it's well-known and it's enough simple to learn how to implement such kind of algorithms.
 
-### The buffer
+### RFC-1321
 
-MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `A`, `B`, `C`, and `D`.
+The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of the standard having reference implementation of the algorithm on C program language.
+
+So we'll can validate our code.
+
+### Digest
+
+MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `a`, `b`, `c`, and `d`.
 
 Their initial values are (lowest byte first):
 
 | Variable | Initial Value |
 |:---------|--------------:|
-|   `A`    | `01 23 45 67` |
-|   `B`    | `08 ab cd ef` |
-|   `C`    | `fe dc ba 98` |
-|   `D`    | `76 54 32 10` |
+|   `a`    | `01 23 45 67` |
+|   `b`    | `08 ab cd ef` |
+|   `c`    | `fe dc ba 98` |
+|   `d`    | `76 54 32 10` |
 
 Inside most modern computers numbers are stored in reverse order, highest byte first. So we need reverse bytes while initializing.
 
 ```rust
-struct ABCD {
+struct Digest {
     pub a: u32,
     pub b: u32,
     pub c: u32,
     pub d: u32,
 }
 
-pub fn md5(bytes: &[u8]) -> ABCD {
-    let abcd = ABCD {
+pub fn md5(bytes: &[u8]) -> Digest {
+    let digest = Digest {
         a: 0x67452301,
         b: 0xefcdab89,
         c: 0x98badcfe,
         d: 0x10325476,
     };
 
-    abcd
+    digest
 }
 ```
 
+### Mixing functions
+
+The MD5 algorithm mixes data with help of four fuctions called `f`, `g`, `h`, and `i`. All of them have three 32-bit parameters and mix them into the one 32-bit value.
+
+```rust
+fn f(x: u32, y: u32, z: u32) -> u32 {
+    x & y | !x & z
+}
+
+fn g(x: u32, y: u32, z: u32) -> u32 {
+    x & z | y & !z
+}
+
+fn h(x: u32, y: u32, z: u32) -> u32 {
+    x ^ y ^ z
+}
+
+fn i(x: u32, y: u32, z: u32) -> u32 {
+    y ^ (x | !z)
+}
+```
+
+### Mixing secret
+
+To make a mixing a bit more unpredictable, the MD5 algorithm uses special table of values, that called `T` in the RFC-1321. This table contains 64 unsigned 32-bit numbers. For each `i` from 1 to 64 `T[i]` is the $|4294967296 \times \sin i|$. Few first values of `T` are 0xd76aa478, 0xe8c7b756, 0x242070db, and 0xc1bdceee.
+
+The reference C implementation doesn't have this table, it uses all values directly instead. We'll do the same.
+
+### Chunks
+
+The algorithm splits source array into 64-byte blocks or *chunks*. Every chunk is proceeded separately in four steps.
+
+1. The 64-byte array is converted to array of unsinged 32-bit integers.
+2. Current digest is stored to a temporary variable.
+3. The integer array is mixed with digest.
+4. The digest from the temporary variable is added to the new digest value.
+
+### Converting bytes to unsigned integers
+
+```rust
+fn to_u32(byte1: u8, byte2: u8, byte3: u8, byte4: u8) -> u32 {
+    byte1 as u32 + ((byte2 as u32) << 8) + ((byte3 as u32) << 16) + ((byte4 as u32) << 24)
+}
+
+fn convert_bytes_to_words(bytes: &[u8]) -> Vec<u32> {
+    const U32_SIZE: usize = std::mem::size_of::<u32>();
+    debug_assert!(bytes.len() % U32_SIZE == 0);
+    let result_length = bytes.len() / U32_SIZE;
+
+    let mut result = Vec::with_capacity(result_length);
+    for i in 0..result_length {
+        result.push(to_u32(bytes[U32_SIZE * i], bytes[U32_SIZE * i + 1],
+                        bytes[U32_SIZE * i + 2], bytes[U32_SIZE * i + 3]));
+    }
+
+    result
+}
+```
+
+Firstly we've implemented the function `to_u32` to convert four bytes to `u32` value. It gets parameters from `byte1` to `byte4`, and let's say their values are 0x11, 0x22, 0x33, and 0x44.
+
+The operator `byte1 as u32` converts 0x11 to 0x00000011, `byte2 as u32` converts 0x22 to 0x00000022, and so on.
+
+`((byte2 as u32) << 8)` shifts 0x00000022 left on eight binary positions that exactly equal to two hexadecimal positions, so 0x00000022 becomes 0x00002200. Following the same reasoning `((byte3 as u32) << 16)` becomes 0x00330000, and `((byte4 as u32) << 24)` becomes 0x44000000. After the addition all four values we will give 0x44332211.
+
+Then we've made the function `convert_bytes_to_words` that fills the array of `u32` with converted values.
+Due to the size of `u32` is exactly four bytes (`U32_SIZE` equals to 4) we have some limits, but also we can use some tricks.
+
+Finally we convert every four bytes of source array to one unsigned integer value and return the array of integers.
+
+### Cloning current value of the digest
+
+There are some ways how we can store the value of digest. The simplest and enough obvious is to make `Digest` *cloneable*. The Rust compiler can do it for us, because the strucutre is primitive.
+
+```rust
+#[derive(Clone)]
+struct Digest {
+    pub a: u32,
+    pub b: u32,
+    pub c: u32,
+    pub d: u32,
+}
+```
+
+Now we can call the `clone()` method to make a copy of the structure.
+
+### Mixing values
 
 ## Binary search in array
