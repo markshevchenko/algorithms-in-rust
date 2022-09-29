@@ -356,7 +356,7 @@ fn to_u32(byte1: u8, byte2: u8, byte3: u8, byte4: u8) -> u32 {
     byte1 as u32 + ((byte2 as u32) << 8) + ((byte3 as u32) << 16) + ((byte4 as u32) << 24)
 }
 
-fn convert_bytes_to_words(bytes: &[u8]) -> Vec<u32> {
+fn to_u32_array(bytes: &[u8]) -> Vec<u32> {
     const U32_SIZE: usize = std::mem::size_of::<u32>();
     debug_assert!(bytes.len() % U32_SIZE == 0);
     let result_length = bytes.len() / U32_SIZE;
@@ -375,18 +375,27 @@ We've implemented the function `to_u32` that converts four bytes to `u32` value.
 
 ![byte1](001_11.svg), ![byte2](002_22.svg), ![byte3](003_33.svg), ![byte4](004_44.svg).
 
-Firstly the functions casts alls values to unsigned 32-bit integers. The operator `byte1 as u32` means that ![byte1](001_11.svg) becomes ![11u32](005_00000011.svg), ![byte2](002_22.svg) becomes ![22u32](006_00000022.svg), and so on.
+Firstly the functions casts alls values to unsigned 32-bit integers. The operator `byte1 as u32` means that ![byte1](001_11.svg) becomes ![11](005_00000011.svg), ![byte2](002_22.svg) becomes ![22](006_00000022.svg), and so on.
 
 Secondly it shifts `byte2`, `byte3`, and `byte4` values to 8, 16, and 24 bits left.
 
-![22u32](006_00000022.svg) becomes ![2200u32](009_00002200.svg),
-![33u32](007_00000022.svg) becomes ![330000u32](010_00330000.svg),
-and ![44u32](008_00000044.svg) becomes ![44000000u32](011_44000000.svg).
+![22](006_00000022.svg) becomes ![2200](009_00002200.svg),
+![33](007_00000033.svg) becomes ![330000](010_00330000.svg),
+and ![44](008_00000044.svg) becomes ![44000000](011_44000000.svg).
 
-Then we've made the function `convert_bytes_to_words` that fills the array of `u32` with converted values.
+After adding all four values the function will return ![44332211](012_44332211.svg).
+
+Then we've made the function `to_u32_array` that fills the array of `u32` with converted values.
 Due to the size of `u32` is exactly four bytes (`U32_SIZE` equals to 4) we have some limits, but also we can use some tricks.
 
-Finally we convert every four bytes of source array to one unsigned integer value and return the array of integers.
+Particulary we should check if `bytes.len()` divided by 4. After this, say, we want convert fourth integer value. It means that `i == 3`, and it means that the function will convert bytes 12, 13, 14, and 15.
+
+```rust
+        result.push(to_u32(bytes[U32_SIZE * i], bytes[U32_SIZE * i + 1],
+                        bytes[U32_SIZE * i + 2], bytes[U32_SIZE * i + 3]));
+```
+
+Finally the function will return the array that it has built.
 
 ### Cloning current value of the digest
 
