@@ -371,11 +371,17 @@ fn convert_bytes_to_words(bytes: &[u8]) -> Vec<u32> {
 }
 ```
 
-Firstly we've implemented the function `to_u32` to convert four bytes to `u32` value. It gets parameters from `byte1` to `byte4`, and let's say their values are 0x11, 0x22, 0x33, and 0x44.
+We've implemented the function `to_u32` that converts four bytes to `u32` value. It has four parameters from `byte1` to `byte4`, and let's say their values are 0x11, 0x22, 0x33, and 0x44.
 
-The operator `byte1 as u32` converts 0x11 to 0x00000011, `byte2 as u32` converts 0x22 to 0x00000022, and so on.
+![byte1](001_11.svg), ![byte2](002_22.svg), ![byte3](003_33.svg), ![byte4](004_44.svg).
 
-`((byte2 as u32) << 8)` shifts 0x00000022 left on eight binary positions that exactly equal to two hexadecimal positions, so 0x00000022 becomes 0x00002200. Following the same reasoning `((byte3 as u32) << 16)` becomes 0x00330000, and `((byte4 as u32) << 24)` becomes 0x44000000. After the addition all four values we will give 0x44332211.
+Firstly the functions casts alls values to unsigned 32-bit integers. The operator `byte1 as u32` means that ![byte1](001_11.svg) becomes ![11u32](005_00000011.svg), ![byte2](002_22.svg) becomes ![22u32](006_00000022.svg), and so on.
+
+Secondly it shifts `byte2`, `byte3`, and `byte4` values to 8, 16, and 24 bits left.
+
+![22u32](006_00000022.svg) becomes ![2200u32](009_00002200.svg),
+![33u32](007_00000022.svg) becomes ![330000u32](010_00330000.svg),
+and ![44u32](008_00000044.svg) becomes ![44000000u32](011_44000000.svg).
 
 Then we've made the function `convert_bytes_to_words` that fills the array of `u32` with converted values.
 Due to the size of `u32` is exactly four bytes (`U32_SIZE` equals to 4) we have some limits, but also we can use some tricks.
@@ -399,5 +405,101 @@ struct Digest {
 Now we can call the `clone()` method to make a copy of the structure.
 
 ### Mixing values
+
+```rust
+fn mix_words(_digest: &mut Digest, _x: &[u32]) {
+    #[macro_export]
+    macro_rules! mix {
+        ($f: ident, $a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
+           _digest.$a = _digest.$b.wrapping_add(_digest.$a.wrapping_add($f(_digest.$b, _digest.$c, _digest.$d))
+                                                          .wrapping_add(_x[$k])
+                                                          .wrapping_add($t_i)
+                                                          .rotate_left($s));
+        };
+    }
+
+    mix!(f, a, b, c, d,  0,  7, 0xd76aa478);
+    mix!(f, d, a, b, c,  1, 12, 0xe8c7b756);
+    mix!(f, c, d, a, b,  2, 17, 0x242070db);
+    mix!(f, b, c, d, a,  3, 22, 0xc1bdceee);
+
+    mix!(f, a, b, c, d,  4,  7, 0xf57c0faf);
+    mix!(f, d, a, b, c,  5, 12, 0x4787c62a);
+    mix!(f, c, d, a, b,  6, 17, 0xa8304613);
+    mix!(f, b, c, d, a,  7, 22, 0xfd469501);
+
+    mix!(f, a, b, c, d,  8,  7, 0x698098d8);
+    mix!(f, d, a, b, c,  9, 12, 0x8b44f7af);
+    mix!(f, c, d, a, b, 10, 17, 0xffff5bb1);
+    mix!(f, b, c, d, a, 11, 22, 0x895cd7be);
+
+    mix!(f, a, b, c, d, 12,  7, 0x6b901122);
+    mix!(f, d, a, b, c, 13, 12, 0xfd987193);
+    mix!(f, c, d, a, b, 14, 17, 0xa679438e);
+    mix!(f, b, c, d, a, 15, 22, 0x49b40821);
+
+    mix!(g, a, b, c, d,  1,  5, 0xf61e2562);
+    mix!(g, d, a, b, c,  6,  9, 0xc040b340);
+    mix!(g, c, d, a, b, 11, 14, 0x265e5a51);
+    mix!(g, b, c, d, a,  0, 20, 0xe9b6c7aa);
+
+    mix!(g, a, b, c, d,  5,  5, 0xd62f105d);
+    mix!(g, d, a, b, c, 10,  9, 0x02441453);
+    mix!(g, c, d, a, b, 15, 14, 0xd8a1e681);
+    mix!(g, b, c, d, a,  4, 20, 0xe7d3fbc8);
+
+    mix!(g, a, b, c, d,  9,  5, 0x21e1cde6);
+    mix!(g, d, a, b, c, 14,  9, 0xc33707d6);
+    mix!(g, c, d, a, b,  3, 14, 0xf4d50d87);
+    mix!(g, b, c, d, a,  8, 20, 0x455a14ed);
+
+    mix!(g, a, b, c, d, 13,  5, 0xa9e3e905);
+    mix!(g, d, a, b, c,  2,  9, 0xfcefa3f8);
+    mix!(g, c, d, a, b,  7, 14, 0x676f02d9);
+    mix!(g, b, c, d, a, 12, 20, 0x8d2a4c8a);
+
+    mix!(h, a, b, c, d,  5,  4, 0xfffa3942);
+    mix!(h, d, a, b, c,  8, 11, 0x8771f681);
+    mix!(h, c, d, a, b, 11, 16, 0x6d9d6122);
+    mix!(h, b, c, d, a, 14, 23, 0xfde5380c);
+
+    mix!(h, a, b, c, d,  1,  4, 0xa4beea44);
+    mix!(h, d, a, b, c,  4, 11, 0x4bdecfa9);
+    mix!(h, c, d, a, b,  7, 16, 0xf6bb4b60);
+    mix!(h, b, c, d, a, 10, 23, 0xbebfbc70);
+
+    mix!(h, a, b, c, d, 13,  4, 0x289b7ec6);
+    mix!(h, d, a, b, c,  0, 11, 0xeaa127fa);
+    mix!(h, c, d, a, b,  3, 16, 0xd4ef3085);
+    mix!(h, b, c, d, a,  6, 23, 0x04881d05);
+
+    mix!(h, a, b, c, d,  9,  4, 0xd9d4d039);
+    mix!(h, d, a, b, c, 12, 11, 0xe6db99e5);
+    mix!(h, c, d, a, b, 15, 16, 0x1fa27cf8);
+    mix!(h, b, c, d, a,  2, 23, 0xc4ac5665);
+
+    mix!(i, a, b, c, d,  0,  6, 0xf4292244);
+    mix!(i, d, a, b, c,  7, 10, 0x432aff97);
+    mix!(i, c, d, a, b, 14, 15, 0xab9423a7);
+    mix!(i, b, c, d, a,  5, 21, 0xfc93a039);
+
+    mix!(i, a, b, c, d, 12,  6, 0x655b59c3);
+    mix!(i, d, a, b, c,  3, 10, 0x8f0ccc92);
+    mix!(i, c, d, a, b, 10, 15, 0xffeff47d);
+    mix!(i, b, c, d, a,  1, 21, 0x85845dd1);
+
+    mix!(i, a, b, c, d,  8,  6, 0x6fa87e4f);
+    mix!(i, d, a, b, c, 15, 10, 0xfe2ce6e0);
+    mix!(i, c, d, a, b,  6, 15, 0xa3014314);
+    mix!(i, b, c, d, a, 13, 21, 0x4e0811a1);
+
+    mix!(i, a, b, c, d,  4,  6, 0xf7537e82);
+    mix!(i, d, a, b, c, 11, 10, 0xbd3af235);
+    mix!(i, c, d, a, b,  2, 15, 0x2ad7d2bb);
+    mix!(i, b, c, d, a,  9, 21, 0xeb86d391);
+}
+```
+
+The mixing is performed in four rounds each consisting of sixteen operations.
 
 ## Binary search in array
