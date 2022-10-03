@@ -259,27 +259,31 @@ Otherwise the code is simple enough.
 
 ## Finding MD5 checksum of byte array
 
-Let's imagine that you've downloaded a very big file from the internet. You want check if the file hasn't corrupted during the download. How can you check it?
+Let's imagine that you've downloaded a very big file from the internet. You want be sure that the file hasn't corrupted during the download. How can you check it?
 
-One of the simplest and fastest way is the comparing of *checksums* or *signatures*. Checksums are short numbers simple to compare. They are calculated by mixing all bytes of the source file.
+One of the simplest and fastest way is the comparing of *checksums* — *signatures* — *digests*. Checksums are short numbers simple to compare. They are calculated by mixing values of bytes of the source file.
 
-Author of the file can calcualte its signature and publish it together with the link. After the downloading you also calculate your signature and compare it with the original value.
+Author of the file can calcualte its signature and publish it together with the link. After the downloading you can also calculate your signature and compare it with the original value.
 
 Equality of signatures mean equality of files. Or maybe not.
 
-Because signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128-bit instead of 32-bit. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
+Due to signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128-bit instead of 32-bit. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
 
-Nowdays MD5 considered not so reliable method. But it's well-known and it's enough simple to learn how to implement such kind of algorithms.
+Nowdays the MD5 considered not so reliable method. But it's well-known and it's enough simple to learn how to implement such kind of algorithms.
 
 ### RFC-1321
 
-The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of the standard having reference implementation of the algorithm on C program language.
+The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of a standard and it has reference implementation of the algorithm on the C program language.
 
-So we'll can validate our code.
+So we'll can check our implementation.
+
+### Mixing in short
+
+
 
 ### Digest
 
-MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32 bits unsigned values. We'll call them `a`, `b`, `c`, and `d`.
+MD5 signature (or *digest*) is the 128 bits value. We can represent it in different forms. Inside the algorithm the signature is stored as four 32-bit unsigned integers. We'll call them `a`, `b`, `c`, and `d`.
 
 Their initial values are (lowest byte first):
 

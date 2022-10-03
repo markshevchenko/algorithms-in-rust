@@ -3,14 +3,14 @@
 [Plan](plan.md)
 
 0. [Introduction](book/0/Introduction.md)
-1. [Arrays as data structures](book/1/Arrays_as_data_structures.md)
-   1. [How arrays work](book/1/Arrays_as_data_structures.md#how-arryas-work)
-   1. [Simple search in array](book/1/Arrays_as_data_structures.md#simple-search-in-array)
-   1. [Finding minimum of array](book/1/Arrays_as_data_structures.md#finding-minimum-of-array)
-   1. [Finding sum and product of items](book/1/Arrays_as_data_structures.md#finding-sum-and-product-of-items)
-   1. [Finding arithmetic mean of items](book/1/Arrays_as_data_structures.md#finding-arithmetic-mean-of-items)
-   1. [Finding MD5 checksum of byte array](book/1/Arrays_as_data_structures.md#finding-md5-checksum-of-byte-array)
-   1. [Binary search in array](book/1/Arrays_as_data_structures.md#binary-search-in-array)
+1. [Array as a data structure](book/1/Array_as_a_data_structure.md)
+   1. [How arrays work](book/1/Array_as_a_data_structure.md#how-arryas-work)
+   1. [Simple search in array](book/1/Array_as_a_data_structure.md#simple-search-in-array)
+   1. [Finding minimum of array](book/1/Array_as_a_data_structure.md#finding-minimum-of-array)
+   1. [Finding sum and product of items](book/1/Array_as_a_data_structure.md#finding-sum-and-product-of-items)
+   1. [Finding arithmetic mean of items](book/1/Array_as_a_data_structure.md#finding-arithmetic-mean-of-items)
+   1. [Finding MD5 checksum of byte array](book/1/Array_as_a_data_structure.md#finding-md5-checksum-of-byte-array)
+   1. [Binary search in array](book/1/Array_as_a_data_structure.md#binary-search-in-array)
 2. Recursion
    1. Introduction
    1. Recursive binary search
