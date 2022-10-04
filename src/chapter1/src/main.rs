@@ -271,6 +271,15 @@ fn main() {
     let (a, b, c, d) = md5::md5(&vec![]);
     println!("md5([]) = {:08x}-{:08x}-{:08x}-{:08x}", a, b, c, d);
 
+    let (a, b, c, d) = md5::md5(&[0]);
+    println!("md5([0]) = {:08x}-{:08x}-{:08x}-{:08x}", a, b, c, d);
+
+    let (a, b, c, d) = md5::md5(&[1]);
+    println!("md5([1]) = {:08x}-{:08x}-{:08x}-{:08x}", a, b, c, d);
+
+
+
+
     let ordered_items = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
     println!("binary_search({:?}, {}) = {:?}", ordered_items, 11, binary_search(&ordered_items, 11));
     println!("binary_search({:?}, {}) = {:?}", ordered_items, 12, binary_search(&ordered_items, 12));

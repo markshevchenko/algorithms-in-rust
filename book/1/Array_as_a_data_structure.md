@@ -1,10 +1,10 @@
-# Arrays as data structures
+# Array as a data structure
 
 ## How arryas work
 
 Arrays are one of most known data structures. Moreover they are simple enough. So, arrays are frequently used as a base data structure for different algorithms.
 
-We won't discuss how arrays are constructed, it's the topic of the future section. Now we will discuss how arrays work.
+We won't discuss how arrays are constructed, it's the topic of the future sections. Now we will discuss how arrays work.
 
 First of all, an array is a set of one-typed items.
 
@@ -12,7 +12,7 @@ First of all, an array is a set of one-typed items.
 let items = vec![3, 1, 4, 1, 5, 9, 2];
 ```
 
-The variable `items` has the type `[i32, 7]` that means 7 elements of the `i32` type. The word *vec* in the code above is the abbreviation of *vector* that is the alias of the *array*.
+The variable `items` has the type `[i32, 7]` that means 7 elements of the `i32` type. The *vec* in the code above is the abbreviation of the word *vector* that is the alias of the *array*.
 
 What can we do with arrays?
 
@@ -45,15 +45,15 @@ items[1] = 6;
 println!("{:?}", items); // => [1, 6, 1, 8, 2, 8, 1, 8, 2, 8]
 ```
 
-Theese three operations are all that we need.
+Theese three operations are all that we need to work with arrays.
 
-So, let see some simple algorithms that work for arrays.
+So, let see some simple algorithms to understand what we can do.
 
 ## Simple search in array
 
-The `search` function looks for the specified item in the array. If the item has found, the function should return the index of the found item.
+The `search` function looks for the specified item in the array. If the item has found, the function should return its index.
 
-In languages such C, Java, or C# the function will return -1 (non-valid index value) to show that the item hasn't found. But Rust has the special type `Option` for this. Our function will return `None`, if the item hasn't found, or `Some` index, if it has found.
+In languages such C, Java, or C# the function will return -1 (non-valid index value) to show that the item hasn't found. But Rust has the special type `Option` for this. Our function will return `None`, if the item hasn't found, or `Some` index, otherwise.
 
 ```rust
 fn search(items: &[i32], value: i32) -> Option<usize> {
@@ -67,13 +67,13 @@ fn search(items: &[i32], value: i32) -> Option<usize> {
 }
 ```
 
-The construction `i in 0..items.len()` means that the `i` variable will get all values from 0 till `items.len()` excluding `items.len()`. So, if the array has 7 elements, `i` will get values 0, 1, 2, 3, 4, 5, and 6, but not 7!
+The construction `i in 0..items.len()` means that the `i` variable will get all values from 0 till `items.len()` excluding `items.len()`. So, if the array has 7 elements, `i` will get values 0, 1, 2, 3, 4, 5, and 6, but not 7.
 
 Here we see most popular method to work with arrays since good old C times. We have the `for` loop with the variable `i`, that we use to access to items.
 
-But if we don't need the index, we can iterate though the items using an *iterator*.
+But if we don't need the index, we can enumerate all items using an *iterator*.
 
-Let's compare `search` and `contains` functions. The `contains` detects if the array has the specified vlaue — yes or no. Because we don't need the index, we can skip `i` variable and check items of the array directly.
+Let's compare `search` and `contains` functions. The `contains` detects if the array has the specified value — yes or no. Because we don't need the index, we can skip `i` variable and check items of the array directly.
 
 ```rust
 fn contains(items: &[i32], value: i32) -> bool {
@@ -95,7 +95,7 @@ What we should understand — iterators hide details of implementation. We can 
 
 ## Finding minimum of array
 
-We have seen two algorithms that iterate through entrire array. But sometimes we need proceed *specific cases*.
+We have seen two algorithms that iterate through entire array. But sometimes we need proceed *specific cases*.
 
 For example we can specificly proceed a first or a last item of an array. Implementing the `min` function we compare each next item with the current minimum value, but we haven't this value for the first item of the array.
 
@@ -143,7 +143,7 @@ fn max(items: &[i32]) -> Option<i32> {
 
 ## Finding sum and product of items
 
-Unlike `min` function, `sum` and `product` are always have a result. It seems surpising because what can be the sum of the empty array?
+Unlike `min` function, `sum` and `product` are always have a result. It seems surpising because, for example, what can be the sum of the empty array?
 
 Let $s_n$ is the sum of numbers $a_1$, $a_2$, ..., $a_n$.
 
@@ -157,7 +157,7 @@ $$
 s_{n + 1} = a_1 + a_2 + \cdots + a_n + a_{n + 1} = s_n + a_{n + 1}
 $$
 
-It means that:
+That means:
 
 $$
 s_n = s_{n + 1} - a_{n + 1}
@@ -167,8 +167,8 @@ This formula helps us to find marginal values $s_1$ and $s_0$.
 
 $$
 \displaylines{
-s_1 = a_1 \\
-s_0 = 0
+s_1 = s_2 - a_2 = a_1 \\
+s_0 = a_1 - a_1 = 0
 }
 $$
 
@@ -209,7 +209,7 @@ Rust is the strongly typed language, so we need to have different functions to s
 
 Fortunately, Rust supports generic types and special traits to summarize everything that can be added.
 
-First we need to append crates `num` and `num-traits` to the **Cargo.toml** file.
+To do this, we need to append crates `num` and `num-traits` to the **Cargo.toml** file.
 
 ```ini
 [dependencies]
@@ -217,7 +217,7 @@ num = "0.4.0"
 num-traits = "0.2.14"
 ```
 
-Then we should use traits `AddAssing` and `Zero` to make generic version of the `sum` function.
+Then we should *use* traits `AddAssing` and `Zero` to make generic version of the `sum` function.
 
 ```rust
 use std::ops::AddAssign;
@@ -237,9 +237,9 @@ where T: Copy + AddAssign + Zero {
 
 The `product` function can be coded the same way, but you need to use `MulAssign` and `One` traits.
 
-## Finding arithmetic mean of items
+## Finding arithmetic mean
 
-Like `min` and `max` functions the `average` can't handle empty arrays, so it should return an optional value.
+Like `min` and `max` functions the `average` can't handle empty arrays, so it should return the optional value.
 
 We can simplify the code using the `sum` function that we have made already.
 
@@ -253,33 +253,45 @@ fn average(items: &[f64]) -> Option<f64> {
 }
 ```
 
-We need to cast the count of elements `items.len()` from the type `usize` to the type `f64`, because we can't divide a float value by an integer value. Remember: Rust is the strongly typed language.
+We need to cast the count of elements `items.len()` to the type `f64`, because Rust can't just divide a float by an integer. Remember — Rust is the strongly typed language.
 
 Otherwise the code is simple enough.
 
 ## Finding MD5 checksum of byte array
 
-Let's imagine that you've downloaded a very big file from the internet. You want be sure that the file hasn't corrupted during the download. How can you check it?
+Let's imagine that you've downloaded a very large file from the internet. You want be sure that the file hasn't corrupted during the download. How can you check it?
 
-One of the simplest and fastest way is the comparing of *checksums* — *signatures* — *digests*. Checksums are short numbers simple to compare. They are calculated by mixing values of bytes of the source file.
+One of the simplest and fastest way is the comparing of *checksums* also known as *signatures* or *digests*. Checksums are short numbers that can be just compared. They are calculated by mixing values of bytes of the source file.
 
 Author of the file can calcualte its signature and publish it together with the link. After the downloading you can also calculate your signature and compare it with the original value.
 
 Equality of signatures mean equality of files. Or maybe not.
 
-Due to signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we can use enough long signatures, for example 128-bit instead of 32-bit. Also we need enough mixing algorithm to avoid cases when `signature("abc")` equals to `signature("bac")` or `signature("cab")`.
+Due to signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we should use enough long signatures, for example 128-bit instead of 32-bit. Also we need the algorithm protected against signatures forgery.
 
-Nowdays the MD5 considered not so reliable method. But it's well-known and it's enough simple to learn how to implement such kind of algorithms.
+Nowdays the MD5 considered not so reliable method. But it's well-known and enough simple to learn how to implement such kind of algorithms.
 
 ### RFC-1321
 
-The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of a standard and it has reference implementation of the algorithm on the C program language.
+The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of a standard and it has reference implementation of the algorithm in the C program language.
 
 So we'll can check our implementation.
 
 ### Mixing in short
 
+Although the MD5 is used to calculate checksum of byte array (actually, bit array) internally it works with 32-bit unsigned integers.
 
+We will call them *words*.
+
+Resulting checksum is the 128-bit value that can be represented as four words. In RFC-1321 these words are named `a`, `b`, `c`, and `d`.
+
+The algorithm converts the stream of source bytes to stream of source words, converting each four bytes to a single word.
+
+The mixing is performed by *chunks* or *blocks*. The algorithm proceeds 16 words on each step.
+
+It calculates new values of `a`, `b`, `c`, and `d` based on their old values, 16 words from input stream, and values from almost random array `t`.
+
+At the end the algorithms proceeds short tail of input stream that shorter than 16 words.
 
 ### Digest
 

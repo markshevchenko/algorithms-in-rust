@@ -364,53 +364,53 @@ pub fn md5(bytes: &[u8]) -> (u32, u32, u32, u32) {
 mod md5_should {
     // https://www.ietf.org/rfc/rfc1321.txt
     // Appendix A.5 Test suite
-    // MD5 ("") = d41d8cd98f00b204e9800998ecf8427e
-    // MD5 ("a") = 0cc175b9c0f1b6a831c399e269772661
-    // MD5 ("abc") = 900150983cd24fb0d6963f7d28e17f72
-    // MD5 ("message digest") = f96b697d7cb7938d525a2f31aaf161d0
-    // MD5 ("abcdefghijklmnopqrstuvwxyz") = c3fcd3d76192e4007dfb496cca67e13b
-    // MD5 ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") = d174ab98d277d9f5a5611c2c9f419d9f
-    // MD5 ("12345678901234567890123456789012345678901234567890123456789012345678901234567890") = 57edf4a22be3c955ac49da2e2107b67a
+    // md5(b"") = d41d8cd98f00b204e9800998ecf8427e
+    // md5(b"a") = 0cc175b9c0f1b6a831c399e269772661
+    // md5(b"abc") = 900150983cd24fb0d6963f7d28e17f72
+    // md5(b"message digest") = f96b697d7cb7938d525a2f31aaf161d0
+    // md5(b"abcdefghijklmnopqrstuvwxyz") = c3fcd3d76192e4007dfb496cca67e13b
+    // md5(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") = d174ab98d277d9f5a5611c2c9f419d9f
+    // md5(b"12345678901234567890123456789012345678901234567890123456789012345678901234567890") = 57edf4a22be3c955ac49da2e2107b67a
     #[test]
     fn return_d41d8cd9_8f00b204_e9800998_ecf8427e_when_empty_bytes() {
         assert_eq!((0xd41d8cd9, 0x8f00b204, 0xe9800998, 0xecf8427e),
-                   super::md5(&"".as_bytes()));
+                   super::md5(b""));
     }
 
     #[test]
     fn return_0cc175b9_c0f1b6a8_31c399e2_69772661_when_a() {
         assert_eq!((0x0cc175b9, 0xc0f1b6a8, 0x31c399e2, 0x69772661),
-                   super::md5(&"a".as_bytes()));
+                   super::md5(b"a"));
     }
 
     #[test]
     fn return_90015098_3cd24fb0_d6963f7d_28e17f72_when_abc() {
         assert_eq!((0x90015098, 0x3cd24fb0, 0xd6963f7d, 0x28e17f72),
-                   super::md5(&"abc".as_bytes()));
+                   super::md5(b"abc"));
     }
 
     #[test]
     fn return_f96b697d_7cb7938d_525a2f31_aaf161d0_when_message_digest() {
         assert_eq!((0xf96b697d, 0x7cb7938d, 0x525a2f31, 0xaaf161d0),
-                   super::md5(&"message digest".as_bytes()));
+                   super::md5(b"message digest"));
     }
 
     #[test]
     fn return_c3fcd3d7_6192e400_7dfb496c_ca67e13b_when_abcdefghijklmnopqrstuvwxyz() {
         assert_eq!((0xc3fcd3d7, 0x6192e400, 0x7dfb496c, 0xca67e13b),
-                   super::md5(&"abcdefghijklmnopqrstuvwxyz".as_bytes()));
+                   super::md5(b"abcdefghijklmnopqrstuvwxyz"));
     }
 
     #[test]
     #[allow(non_snake_case)]
     fn return_d174ab98_d277d9f5_a5611c2c_9f419d9f_when_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789() {
         assert_eq!((0xd174ab98, 0xd277d9f5, 0xa5611c2c, 0x9f419d9f),
-                   super::md5(&"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".as_bytes()));
+                   super::md5(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
     }
 
     #[test]
     fn return_57edf4a2_2be3c955_ac49da2e_2107b67a_when_12345678901234567890123456789012345678901234567890123456789012345678901234567890() {
         assert_eq!((0x57edf4a2, 0x2be3c955, 0xac49da2e, 0x2107b67a),
-                   super::md5(&"12345678901234567890123456789012345678901234567890123456789012345678901234567890".as_bytes()));
+                   super::md5(b"12345678901234567890123456789012345678901234567890123456789012345678901234567890"));
     }
 }
