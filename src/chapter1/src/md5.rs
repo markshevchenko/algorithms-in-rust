@@ -178,7 +178,7 @@ fn mix_words(_digest: &mut Digest, _x: &[u32]) {
     
     macro_rules! mix_round1 {
         ($a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           mix!(f, $a, $b, $d, $d, $k, $s, $t_i);
+           mix!(f, $a, $b, $c, $d, $k, $s, $t_i);
         };
     }
 
@@ -204,7 +204,7 @@ fn mix_words(_digest: &mut Digest, _x: &[u32]) {
 
     macro_rules! mix_round2 {
         ($a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           mix!(g, $a, $b, $d, $d, $k, $s, $t_i);
+           mix!(g, $a, $b, $c, $d, $k, $s, $t_i);
         };
     }
 
@@ -230,7 +230,7 @@ fn mix_words(_digest: &mut Digest, _x: &[u32]) {
 
     macro_rules! mix_round3 {
         ($a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           mix!(h, $a, $b, $d, $d, $k, $s, $t_i);
+           mix!(h, $a, $b, $c, $d, $k, $s, $t_i);
         };
     }
 
@@ -256,7 +256,7 @@ fn mix_words(_digest: &mut Digest, _x: &[u32]) {
 
     macro_rules! mix_round4 {
         ($a: ident, $b: ident, $c: ident, $d: ident, $k: literal, $s: literal, $t_i: literal) => {
-           mix!(i, $a, $b, $d, $d, $k, $s, $t_i);
+           mix!(i, $a, $b, $c, $d, $k, $s, $t_i);
         };
     }
 
