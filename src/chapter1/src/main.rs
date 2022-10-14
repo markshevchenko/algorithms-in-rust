@@ -1,7 +1,7 @@
 extern crate num_traits;
 
-fn search(items: &[i32], value: i32) -> Option<usize> {
-    for i in 0..items.len() {
+fn search(items: &[i32], value: i32, start_index: usize) -> Option<usize> {
+    for i in start_index..items.len() {
         if items[i] == value {
             return Some(i)
         }
@@ -14,17 +14,17 @@ fn search(items: &[i32], value: i32) -> Option<usize> {
 mod search_should {
     #[test]
     fn return_none_when_empty_items() {
-        assert_eq!(None, super::search(&[], 1));
+        assert_eq!(None, super::search(&[], 1, 0));
     }
 
     #[test]
     fn return_none_when_items_doesnt_contain_value() {
-        assert_eq!(None, super::search(&[2, 3, 4], 1));
+        assert_eq!(None, super::search(&[2, 3, 4], 1, 0));
     }
 
     #[test]
-    fn return_some_index_when_items_contains_value() {
-        assert_eq!(Some(2), super::search(&[3, 2, 1, 0], 1));
+    fn return_some_index_of_most_left_found_value() {
+        assert_eq!(Some(2), super::search(&[3, 2, 1, 1], 1, 0));
     }
 }
 
@@ -244,8 +244,9 @@ fn main() {
     let empty_float = [0.0; 0];
     let float_items = [0.0, 12.0, 6.0, 18.0, 3.0, 4.0];
 
-    println!("search({:?}, {}) = {:?}", items, 6, search(&items, 6));
-    println!("search({:?}, {}) = {:?}", items, 5, search(&items, 5));
+    println!("search({:?}, 6, 0) = {:?}", items, search(&items, 6, 0));
+    println!("search({:?}, 5, 0) = {:?}", items, search(&items, 5, 0));
+    println!("search({:?}, 6, 3) = {:?}", items, search(&items, 5, 3));
 
     println!("contains({:?}, {}) = {}", items, 6, contains(&items, 6));
     println!("contains({:?}, {}) = {}", items, 5, contains(&items, 5));

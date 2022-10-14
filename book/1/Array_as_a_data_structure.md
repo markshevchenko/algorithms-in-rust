@@ -2,39 +2,39 @@
 
 ## How arryas work
 
-Arrays are one of most known data structures. Moreover they are simple enough. So, arrays are frequently used as a base data structure for different algorithms.
+Arrays are one of most known data structures. Moreover they are simple enough. Thus, arrays are frequently used as a base data structure for different algorithms.
 
 We won't discuss how arrays are constructed, it's the topic of the future sections. Now we will discuss how arrays work.
 
-First of all, an array is a set of one-typed items.
+The array is the set of one-typed items.
 
 ```rust
 let items = vec![3, 1, 4, 1, 5, 9, 2];
 ```
 
-The variable `items` has the type `[i32, 7]` that means 7 elements of the `i32` type. The *vec* in the code above is the abbreviation of the word *vector* that is the alias of the *array*.
+The variable `items` has the type `[i32, 7]` that means 7 elements of the `i32` type. The *vec* in the code above is the abbreviation of the word *vector*. It is alias of the *array* — maybe not so good.
 
 What can we do with arrays?
 
-Firstly, we can detect the length (the count of items) of array with the help of the `len()` method.
+First, we can detect the length (the count of items) of array with the help of the `len()` method.
 
 ```rust
 println!{"{}", items.len()}; // => 7
 ```
 
-Secondly, we can get the item by its non-negative index.
+Second, we can get the item by its non-negative index.
 
 ```rust
 println!("{}", items[2]); // => 4
 ```
 
-As in the C and many other inheritors of C, the first item of the array has the index 0.
+Like in the C and many inheritors of C, the first item of the array has the index 0.
 
 ```rust
 println!("{}", items[0]); // => 3
 ```
 
-Thirdly, we can set the item by its index, but the array should be mutable.
+Third, we can set the item by its index, but the array should be mutable.
 
 ```rust
 let mut items = vec![2, 7, 1, 8, 2, 8, 1, 8, 2, 8];
@@ -47,13 +47,33 @@ println!("{:?}", items); // => [1, 6, 1, 8, 2, 8, 1, 8, 2, 8]
 
 Theese three operations are all that we need to work with arrays.
 
-So, let see some simple algorithms to understand what we can do.
+Now let see some simple algorithms to understand how theese operations can be used.
 
 ## Simple search in array
 
-The `search` function looks for the specified item in the array. If the item has found, the function should return its index.
+What does mean *search* according to an array?
 
-In languages such C, Java, or C# the function will return -1 (non-valid index value) to show that the item hasn't found. But Rust has the special type `Option` for this. Our function will return `None`, if the item hasn't found, or `Some` index, otherwise.
+
+
+Let see the simplified example of `indexOf` from Java standard library.
+
+```java
+public class ArrayUtils {
+    public static int indexOf(final int[] array, final int value) {
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+This second kind of search functions.
+
+In languages like C, Java, or C# the function `search` returns -1, i.e. non-valid index value. Such value shows that the item hasn't found. The Rust has the special type `Option` for values that might be missed. Our function will return `None`, if the item hasn't found, or `Some` index, otherwise.
 
 ```rust
 fn search(items: &[i32], value: i32) -> Option<usize> {
@@ -67,9 +87,25 @@ fn search(items: &[i32], value: i32) -> Option<usize> {
 }
 ```
 
-The construction `i in 0..items.len()` means that the `i` variable will get all values from 0 till `items.len()` excluding `items.len()`. So, if the array has 7 elements, `i` will get values 0, 1, 2, 3, 4, 5, and 6, but not 7.
+The construction `i in 0..items.len()` means that the `i` variable will get all values from 0 till `items.len()` excluding `items.len()`. Thus, if the array has 7 elements, `i` will get values 0, 1, 2, 3, 4, 5, and 6, but not 7.
 
-Here we see most popular method to work with arrays since good old C times. We have the `for` loop with the variable `i`, that we use to access to items.
+Here we see most popular method to work with arrays since good old C times.
+
+```c
+size_t search(int* items, size_t length, int value)
+{
+    for (size_t i = 0; i < length; i++) {
+        if (items[i] == value)
+            return i;
+    }
+
+    return -1;
+}
+```
+
+
+
+ We have the `for` loop with the variable `i`, that we use to access to items.
 
 But if we don't need the index, we can enumerate all items using an *iterator*.
 
@@ -269,11 +305,18 @@ Equality of signatures mean equality of files. Or maybe not.
 
 Due to signatures are more shorter than source files sometimes they can be equal even if files are different. To reduce the probability of collisions we should use enough long signatures, for example 128-bit instead of 32-bit. Also we need the algorithm protected against signatures forgery.
 
+"Forgery" means few things. For example, signatures of suitable data should different strongly.
+
+```
+> md5(&[0]) = 93b885ad-fe0da089-cdf63490-4fd59f71
+> md5(&[1]) = 55a54008-ad1ba589-aa210d26-29c1df41
+```
+
 Nowdays the MD5 considered not so reliable method. But it's well-known and enough simple to learn how to implement such kind of algorithms.
 
 ### RFC-1321
 
-The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of a standard and it has reference implementation of the algorithm in the C program language.
+The MD5 algorightm has been described in the [RFC-1321](https://www.ietf.org/rfc/rfc1321.txt). Although the document has title "Request For Comments" actually it's a kind of a standard and has reference implementation of the algorithm in the C program language.
 
 So we'll can check our implementation.
 
@@ -289,7 +332,9 @@ The algorithm converts the stream of source bytes to stream of source words, con
 
 The mixing is performed by *chunks* or *blocks*. The algorithm proceeds 16 words on each step.
 
-It calculates new values of `a`, `b`, `c`, and `d` based on their old values, 16 words from input stream, and values from almost random array `t`.
+It calculates new values of `a`, `b`, `c`, and `d` based on their old values, 16 words from input stream, and values from almost random array `t` that we'll discuss later.
+
+At the end of input stream algorithms append 
 
 At the end the algorithms proceeds short tail of input stream that shorter than 16 words.
 
