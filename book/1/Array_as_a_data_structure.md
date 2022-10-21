@@ -51,11 +51,22 @@ Now let see some simple algorithms to understand how theese operations can be us
 
 ## Simple search in array
 
-What does mean *search* according to an array?
+What can mean *the search*? Lets talk about typical tasks related to search.
+
+```rust
+fn contains(items: &[i32], value: i32) -> bool {
+    for item in items.into_iter() {
+        if *item == value {
+            return true
+        }
+    }
+
+    false
+}
+```
 
 
 
-Let see the simplified example of `indexOf` from Java standard library.
 
 ```java
 public class ArrayUtils {
@@ -110,18 +121,6 @@ size_t search(int* items, size_t length, int value)
 But if we don't need the index, we can enumerate all items using an *iterator*.
 
 Let's compare `search` and `contains` functions. The `contains` detects if the array has the specified value — yes or no. Because we don't need the index, we can skip `i` variable and check items of the array directly.
-
-```rust
-fn contains(items: &[i32], value: i32) -> bool {
-    for item in items.into_iter() {
-        if *item == value {
-            return true
-        }
-    }
-
-    false
-}
-```
 
 As you have possibly noticed, we use the *star* operator to get access to items inside the `for` loop. It's because the iterator returns references to items instead of items themselves.
 
