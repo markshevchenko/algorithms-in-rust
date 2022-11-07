@@ -1,36 +1,8 @@
 extern crate num_traits;
 
-fn search(items: &[i32], value: i32, start_index: usize) -> Option<usize> {
-    for i in start_index..items.len() {
-        if items[i] == value {
-            return Some(i)
-        }
-    }
-
-    None
-}
-
-#[cfg(test)]
-mod search_should {
-    #[test]
-    fn return_none_when_empty_items() {
-        assert_eq!(None, super::search(&[], 1, 0));
-    }
-
-    #[test]
-    fn return_none_when_items_doesnt_contain_value() {
-        assert_eq!(None, super::search(&[2, 3, 4], 1, 0));
-    }
-
-    #[test]
-    fn return_some_index_of_most_left_found_value() {
-        assert_eq!(Some(2), super::search(&[3, 2, 1, 1], 1, 0));
-    }
-}
-
 fn contains(items: &[i32], value: i32) -> bool {
-    for item in items.into_iter() {
-        if *item == value {
+    for i in 0..items.len() {
+        if items[i] == value {
             return true
         }
     }
@@ -53,6 +25,86 @@ mod contains_should {
     #[test]
     fn return_true_when_items_3210_contain_1() {
         assert!(super::contains(&[3, 2, 1, 0], 1));
+    }
+}
+
+#[derive(PartialEq, Debug)]
+struct User<'a> {
+    pub id: u32,
+    pub login: &'a str,
+}
+
+fn search_user_by_id<'a, 'b>(users: &'a [User<'b>], id: u32) -> Option<&'a User<'b>> {
+    for i in 0..users.len() {
+        if users[i].id == id {
+            return Some(&users[i])
+        }
+    }
+
+    return None
+}
+
+#[cfg(test)]
+mod search_user_by_id_should {
+    use super::{search_user_by_id, User};
+
+    #[test]
+    fn return_none_when_missed_id() {
+        let users = vec![
+            User { id: 1, login: "John Smith" },
+            User { id: 2, login: "Jack Brown" },
+            User { id: 3, login: "Ronald Tolkien" }];
+
+        let non_existing_id = 4;
+
+        assert!(search_user_by_id(&users, non_existing_id).is_none());
+    }
+
+    #[test]
+    fn return_login_jack_brown_when_id_is_2() {
+        let users = vec![
+            User { id: 1, login: "John Smith" },
+            User { id: 2, login: "Jack Brown" },
+            User { id: 3, login: "Ronald Tolkien" }];
+
+        let jack_brown_id = 2;
+
+        assert_eq!("Jack Brown", search_user_by_id(&users, jack_brown_id).unwrap().login);
+    }
+}
+
+fn search_user_by_login<'a, 'b, 'c>(users: &'a [User<'b>], login: &'c str) -> Option<&'a User<'b>> {
+    for i in 0..users.len() {
+        if users[i].login == login {
+            return Some(&users[i])
+        }
+    }
+
+    return None
+}
+
+#[cfg(test)]
+mod search_user_by_login_should {
+    use super::{search_user_by_login, User};
+
+    #[test]
+    fn return_none_when_missed_login() {
+        let users = vec![
+            User { id: 1, login: "John Smith" },
+            User { id: 2, login: "Jack Brown" },
+            User { id: 3, login: "Ronald Tolkien" }];
+
+        assert!(search_user_by_login(&users, &"John Doe").is_none());
+    }
+
+    #[test]
+    fn return_id_2_when_login_is_jack_brown() {
+        let users = vec![
+            User { id: 1, login: "John Smith" },
+            User { id: 2, login: "Jack Brown" },
+            User { id: 3, login: "Ronald Tolkien" }];
+
+        assert_eq!(2, search_user_by_login(&users, &"Jack Brown").unwrap().id);
     }
 }
 
@@ -244,12 +296,17 @@ fn main() {
     let empty_float = [0.0; 0];
     let float_items = [0.0, 12.0, 6.0, 18.0, 3.0, 4.0];
 
-    println!("search({:?}, 6, 0) = {:?}", items, search(&items, 6, 0));
-    println!("search({:?}, 5, 0) = {:?}", items, search(&items, 5, 0));
-    println!("search({:?}, 6, 3) = {:?}", items, search(&items, 5, 3));
+    let users = vec![User { id: 1, login: &"foo" },
+        User { id: 2, login: &"boo" }];
 
     println!("contains({:?}, {}) = {}", items, 6, contains(&items, 6));
     println!("contains({:?}, {}) = {}", items, 5, contains(&items, 5));
+
+    println!("search_user_by_id({:?}, {}) = {:?}", users, 3, search_user_by_id(&users, 3));
+    println!("search_user_by_id({:?}, {}) = {:?}", users, 1, search_user_by_id(&users, 1));
+
+    println!("search_user_by_login({:?}, \"{}\") = {:?}", users, "baz", search_user_by_login(&users, "baz"));
+    println!("search_user_by_login({:?}, \"{}\") = {:?}", users, "foo", search_user_by_login(&users, "foo"));
 
     println!("min({:?}) = {:?}", empty, min(&empty));
     println!("min({:?}) = {:?}", items, min(&items));
