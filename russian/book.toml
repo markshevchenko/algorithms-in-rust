@@ -1,0 +1,6 @@
+[book]
+authors = ["Марк Шевченко"]
+language = "ru"
+multilingual = false
+src = "src"
+title = "Алгоритмы на языке Rust"
