@@ -1,3 +1,7 @@
+pub fn percent(n: i32, percent: i32) -> i32 {
+    n * percent / 100
+}
+
 pub fn min(a: i32, b: i32) -> i32 {
     if a < b {
         a
