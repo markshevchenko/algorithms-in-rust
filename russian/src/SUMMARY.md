@@ -5,8 +5,8 @@
 # Простые типы данных
 
 - [Числа](01-numbers/README.md)
-  - [Минимум двух чисел](01-numbers/01-minimum-of-two-numbers.md) 
-  - [Алгоритм Евклида]()
+  - [Минимум двух чисел](01-numbers/01-minimum-of-two-numbers.md)
+  - [Алгоритм Евклида](01-numbers/02-euclidean-algorithm.md)
   - [Простые числа]()
   - [Квадратный корень]()
   - [Синус]()

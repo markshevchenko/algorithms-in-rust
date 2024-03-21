@@ -11,11 +11,22 @@ pub fn min(a: i32, b: i32) -> i32 {
 }
 
 
+// pub fn min2<T>(a: T, b: T) -> T where T: Ord {
+//     if a < b {
+//         a
+//     } else {
+//         b
+//     }
+// }
+
+
 pub fn min2<T>(a: T, b: T) -> T where T: Ord {
-    if a < b {
-        a
-    } else {
-        b
+    use std::cmp::Ordering;
+
+    match a.cmp(&b) {
+        Ordering::Less => a,
+        Ordering::Equal => b,
+        Ordering::Greater => b,
     }
 }
 
@@ -31,4 +42,20 @@ pub fn partial_min2<T>(a: T, b: T) -> Option<T> where T: PartialOrd {
         None => None,
         _ => Some(b),
     }
+}
+
+
+pub fn gdc(a: u32, b: u32) -> u32 {
+    let (mut a, mut b) =
+        if a > b {
+            (a, b)
+        } else {
+            (b, a)
+        };
+
+    while b != 0 {
+        (a, b) = (b, a % b);
+    }
+
+    a
 }
