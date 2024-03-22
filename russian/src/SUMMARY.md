@@ -7,7 +7,7 @@
 - [Числа](01-numbers/README.md)
   - [Минимум двух чисел](01-numbers/01-minimum-of-two-numbers.md)
   - [Алгоритм Евклида](01-numbers/02-euclidean-algorithm.md)
-  - [Квадратный корень]()
+  - [Квадратный корень](01-numbers/03-square-root.md)
   - [Синус]()
 
 - [ASCII-символы]()
