@@ -59,3 +59,18 @@ pub fn gdc(a: u32, b: u32) -> u32 {
 
     a
 }
+
+pub fn sqrt(x: f64) -> f64 {
+    if x < 0.0 {
+        return f64::NAN;
+    }
+
+    let error = x * f64::EPSILON;
+    let mut a = x / 2.0;
+
+    while (a * a - x).abs() > error {
+        a = (a + x / a) / 2.0;
+    }
+
+    a
+}
