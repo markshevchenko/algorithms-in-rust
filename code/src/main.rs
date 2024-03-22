@@ -13,17 +13,24 @@ fn main() {
     } else {
         match args[1].as_str() {
             "numbers" => {
-                println!("percent({}, {}) is {}", 200, 20, numbers::percent(200, 20));
-                println!("percent({}, 100 - {}) is {}", 200, 20, numbers::percent(200, 100 - 20));
+                println!("percent({}, {}) = {}", 200, 20, numbers::percent(200, 20));
+                println!("percent({}, 100 - {}) = {}", 200, 20, numbers::percent(200, 100 - 20));
                 
-                println!("min({}, {}) is {}", 3, -5, numbers::min(3, -5));
-                println!("min2({}, {}) is {}", "foo", "bar", numbers::min2("foo", "bar"));
-                // println!("min2({}, {}) is {}", 2.7182, 3.1415, numbers::min2(2.7182, 3.1415));
-                println!("min3({}, {}, {}) is {}", "foo", "bar", "baz", numbers::min3("foo", "bar", "baz"));
-                println!("partial_min2({}, {}) is {:?}", f64::NAN, 3.1415, numbers::partial_min2(&f64::NAN, &3.1415));
-                println!("partial_min2({}, {}) is {:?}", 2.7182, 3.1415, numbers::partial_min2(&2.7182, &3.1415));
+                println!("min({}, {}) = {}", 3, -5, numbers::min(3, -5));
+                println!("min2({}, {}) = {}", "foo", "bar", numbers::min2("foo", "bar"));
+                // println!("min2({}, {}) = {}", 2.7182, 3.1415, numbers::min2(2.7182, 3.1415));
+                println!("min3({}, {}, {}) = {}", "foo", "bar", "baz", numbers::min3("foo", "bar", "baz"));
+                println!("partial_min2({}, {}) = {:?}", f64::NAN, 3.1415, numbers::partial_min2(&f64::NAN, &3.1415));
+                println!("partial_min2({}, {}) = {:?}", 2.7182, 3.1415, numbers::partial_min2(&2.7182, &3.1415));
 
-                println!("gdc({}, {}) is {}", 140, 96, numbers::gdc(140, 96));
+                println!("gdc({}, {}) = {}", 140, 96, numbers::gdc(140, 96));
+
+                println!("sqrt({}) = {}", 0.0, numbers::sqrt(0.0));
+                println!("sqrt({}) = {}", 0.000002, numbers::sqrt(0.000002));
+                println!("sqrt({}) = {}", 1.0, numbers::sqrt(1.0));
+                println!("sqrt({}) = {}", 2.0, numbers::sqrt(2.0));
+                println!("sqrt({}) = {}", 3.0, numbers::sqrt(3.0));
+                println!("sqrt({}) = {}", 4.0, numbers::sqrt(4.0));
             },
             _ => {
                 println!("Unrecognized parameter. Re-run application without arguments to help.");
