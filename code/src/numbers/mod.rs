@@ -74,3 +74,26 @@ pub fn sqrt(x: f64) -> f64 {
 
     a
 }
+
+pub fn sin(x: f64) -> f64 {
+    let error = {
+        let x = x.abs();
+        if x < 1.0 {
+            x * f64::EPSILON
+        } else {
+            f64::EPSILON
+        }
+    };
+
+    let mut n = 1;
+    let mut element = x;
+    let mut accumulator = 0.0;
+
+    while element.abs() > error {
+        accumulator += element;
+        element = -element * x * x / f64::from((n + 1) * (n + 2));
+        n += 2;
+    }
+
+    accumulator
+}
