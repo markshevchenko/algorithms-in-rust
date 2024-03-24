@@ -8,7 +8,7 @@
   - [Минимум двух чисел](01-numbers/01-minimum-of-two-numbers.md)
   - [Алгоритм Евклида](01-numbers/02-euclidean-algorithm.md)
   - [Квадратный корень](01-numbers/03-square-root.md)
-  - [Синус]()
+  - [Синус](01-numbers/04-sinus.md)
 
 - [ASCII-символы]()
   - [Это цифра?]()
