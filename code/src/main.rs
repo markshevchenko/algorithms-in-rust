@@ -1,6 +1,7 @@
 use std::env;
 
 mod numbers;
+mod ascii_characters;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -40,6 +41,17 @@ fn main() {
                 println!("sin({}) = {}", -PI / 6.0, numbers::sin(-PI / 6.0));
 
                 println!("sin({}) = {}", 1.5 * PI, numbers::sin(1.5 * PI));
+            },
+            "ascii" => {
+                println!("is_digit({}) = {}", b'D', ascii_characters::is_digit(b'D'));
+                println!("is_digit({}) = {}", b'3', ascii_characters::is_digit(b'3'));
+                println!("is_lower({}) = {}", b't', ascii_characters::is_lower(b't'));
+                println!("is_lower({}) = {}", b'T', ascii_characters::is_lower(b'T'));
+                println!("is_upper({}) = {}", b't', ascii_characters::is_upper(b't'));
+                println!("is_upper({}) = {}", b'T', ascii_characters::is_upper(b'T'));
+                println!("is_letter({}) = {}", b'D', ascii_characters::is_letter(b'D'));
+                println!("is_letter({}) = {}", b'd', ascii_characters::is_letter(b'd'));
+                println!("is_letter({}) = {}", b'3', ascii_characters::is_letter(b'3'));
             },
             _ => {
                 println!("Unrecognized parameter. Re-run application without arguments to help.");
