@@ -31,6 +31,15 @@ fn main() {
                 println!("sqrt({}) = {}", 2.0, numbers::sqrt(2.0));
                 println!("sqrt({}) = {}", 3.0, numbers::sqrt(3.0));
                 println!("sqrt({}) = {}", 4.0, numbers::sqrt(4.0));
+
+                use std::f64::consts::PI;
+
+                println!("sin({}) = {}", 0.0, numbers::sin(0.0));
+                println!("sin({}) = {}", PI / 2.0, numbers::sin(PI / 2.0));
+                println!("sin({}) = {}", PI / 6.0, numbers::sin(PI / 6.0));
+                println!("sin({}) = {}", -PI / 6.0, numbers::sin(-PI / 6.0));
+
+                println!("sin({}) = {}", 1.5 * PI, numbers::sin(1.5 * PI));
             },
             _ => {
                 println!("Unrecognized parameter. Re-run application without arguments to help.");
