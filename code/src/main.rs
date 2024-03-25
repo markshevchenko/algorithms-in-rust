@@ -64,6 +64,18 @@ fn main() {
                 println!("parse_32(\"{}\") = {:?}", "00027", ascii::parse_u32(b"00027"));
                 println!("parse_32(\"{}\") = {:?}", "123ab", ascii::parse_u32(b"123ab"));
                 println!("parse_32(\"{}\") = {:?}", "abcde", ascii::parse_u32(b"abcde"));
+                println!("parse_32(\"{}\") = {:?}", "4294967295", ascii::parse_u32(b"4294967295"));
+                println!("parse_32(\"{}\") = {:?}", "4294967296", ascii::parse_u32(b"4294967296"));
+
+                println!("caesar_encrypt(\"{}\", {}) = \"{}\"",
+                    "Lorem ipsum dolor sit amet",
+                    5,
+                    String::from_utf8(ascii::caesar_encrypt(b"Lorem ipsum dolor sit amet", 5)).unwrap());
+
+                println!("caesar_decrypt(\"{}\", {}) = \"{}\"",
+                    "Qtwjr nuxzr itqtw xny frjy",
+                    5,
+                    String::from_utf8(ascii::caesar_decrypt(b"Qtwjr nuxzr itqtw xny frjy", 5)).unwrap());
             },
             _ => {
                 println!("Unrecognized parameter. Re-run application without arguments to help.");

@@ -10,10 +10,10 @@
   - [Квадратный корень](01-numbers/03-square-root.md)
   - [Синус](01-numbers/04-sinus.md)
 
-- [ASCII-символы](02-ascii-characters/README.md)
-  - [Это цифра? Это буква?](02-ascii-characters/01-is-it-digit.md)
-  - [Регистр букв]()
-  - [Кодирование повторов]()
+- [ASCII-символы](02-ascii/README.md)
+  - [Это цифра? Это буква?](02-ascii/01-is-it-digit.md)
+  - [Регистр букв](02-ascii/02-letter-case.md)
+  - [Переводим строку в число]()
 
 - [Битовая арифметика]()
 
