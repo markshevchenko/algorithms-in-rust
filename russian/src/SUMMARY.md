@@ -11,9 +11,9 @@
   - [Синус](01-numbers/04-sinus.md)
 
 - [ASCII-символы](02-ascii/README.md)
-  - [Это цифра? Это буква?](02-ascii/01-is-it-digit.md)
-  - [Регистр букв](02-ascii/02-letter-case.md)
-  - [Переводим строку в число]()
+  - [Буквы и цифры](02-ascii/01-letters-and-digits.md)
+  - [Переводим строку в число](02-ascii/02-convert-string-to-integer.md)
+  - [Шифр Цезаря](02-ascii/03-cipher-of-caesar.md)
 
 - [Битовая арифметика]()
 
