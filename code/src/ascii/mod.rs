@@ -32,6 +32,24 @@ pub fn to_upper(c: u8) -> u8 {
     }
 }
 
+// pub fn parse_u32(s: &[u8]) -> Option<u32> {
+//     if s.len() == 0 || !is_digit(s[0]) {
+//         return None;
+//     }
+
+//     let mut accumulator: u32 = 0;
+//     let mut i = 0;
+
+//     while i < s.len() && is_digit(s[i]) {
+//         let next_digit = u32::from(s[i] - b'0');
+//         accumulator = 10 * accumulator + next_digit;
+        
+//         i += 1;
+//     }
+
+//     Some(accumulator)
+// }
+
 pub fn parse_u32(s: &[u8]) -> Option<u32> {
     if s.len() == 0 || !is_digit(s[0]) {
         return None;
@@ -41,20 +59,12 @@ pub fn parse_u32(s: &[u8]) -> Option<u32> {
     let mut i = 0;
 
     while i < s.len() && is_digit(s[i]) {
-        // let next_digit = u32::from(s[i] - b'0');
-        // accumulator = 10 * accumulator + next_digit;
-        if accumulator > u32::MAX / 10 {
+        let next_digit = u32::from(s[i] - b'0');
+        if accumulator > u32::MAX / 10 || 10 * accumulator > u32::MAX - next_digit {
             return Some(accumulator);
         }
 
-        let accumulator10 = accumulator * 10;
-        
-        let next_digit = u32::from(s[i] - b'0');
-        if accumulator10 > u32::MAX - next_digit {
-            return Some(accumulator);
-        }
-        
-        accumulator = accumulator10 + next_digit;
+        accumulator = 10 * accumulator + next_digit;
         
         i += 1;
     }

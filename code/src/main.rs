@@ -60,12 +60,12 @@ fn main() {
                 println!("to_lower('{}') = '{}'", 'F', char::from(ascii::to_lower(b'F')));
                 println!("to_lower('{}') = '{}'", 'f', char::from(ascii::to_lower(b'f')));
 
-                println!("parse_32(\"{}\") = {:?}", "12345", ascii::parse_u32(b"12345"));
-                println!("parse_32(\"{}\") = {:?}", "00027", ascii::parse_u32(b"00027"));
-                println!("parse_32(\"{}\") = {:?}", "123ab", ascii::parse_u32(b"123ab"));
-                println!("parse_32(\"{}\") = {:?}", "abcde", ascii::parse_u32(b"abcde"));
-                println!("parse_32(\"{}\") = {:?}", "4294967295", ascii::parse_u32(b"4294967295"));
-                println!("parse_32(\"{}\") = {:?}", "4294967296", ascii::parse_u32(b"4294967296"));
+                println!("parse_u32(\"{}\") = {:?}", "12345", ascii::parse_u32(b"12345"));
+                println!("parse_u32(\"{}\") = {:?}", "00027", ascii::parse_u32(b"00027"));
+                println!("parse_u32(\"{}\") = {:?}", "123ab", ascii::parse_u32(b"123ab"));
+                println!("parse_u32(\"{}\") = {:?}", "abcde", ascii::parse_u32(b"abcde"));
+                println!("parse_u32(\"{}\") = {:?}", "4294967295", ascii::parse_u32(b"4294967295"));
+                println!("parse_u32(\"{}\") = {:?}", "4294967296", ascii::parse_u32(b"4294967296"));
 
                 println!("caesar_encrypt(\"{}\", {}) = \"{}\"",
                     "Lorem ipsum dolor sit amet",
