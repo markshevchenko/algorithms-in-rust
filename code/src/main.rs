@@ -1,7 +1,7 @@
 use std::env;
 
 mod numbers;
-mod ascii_characters;
+mod ascii;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -43,15 +43,39 @@ fn main() {
                 println!("sin({}) = {}", 1.5 * PI, numbers::sin(1.5 * PI));
             },
             "ascii" => {
-                println!("is_digit({}) = {}", b'D', ascii_characters::is_digit(b'D'));
-                println!("is_digit({}) = {}", b'3', ascii_characters::is_digit(b'3'));
-                println!("is_lower({}) = {}", b't', ascii_characters::is_lower(b't'));
-                println!("is_lower({}) = {}", b'T', ascii_characters::is_lower(b'T'));
-                println!("is_upper({}) = {}", b't', ascii_characters::is_upper(b't'));
-                println!("is_upper({}) = {}", b'T', ascii_characters::is_upper(b'T'));
-                println!("is_letter({}) = {}", b'D', ascii_characters::is_letter(b'D'));
-                println!("is_letter({}) = {}", b'd', ascii_characters::is_letter(b'd'));
-                println!("is_letter({}) = {}", b'3', ascii_characters::is_letter(b'3'));
+                println!("is_digit('{}') = {}", 'D', ascii::is_digit(b'D'));
+                println!("is_digit('{}') = {}", '3', ascii::is_digit(b'3'));
+                println!("is_lower('{}') = {}", 't', ascii::is_lower(b't'));
+                println!("is_lower('{}') = {}", 'T', ascii::is_lower(b'T'));
+                println!("is_upper('{}') = {}", 't', ascii::is_upper(b't'));
+                println!("is_upper('{}') = {}", 'T', ascii::is_upper(b'T'));
+                println!("is_letter('{}') = {}", 'D', ascii::is_letter(b'D'));
+                println!("is_letter('{}') = {}", 'd', ascii::is_letter(b'd'));
+                println!("is_letter('{}') = {}", '3', ascii::is_letter(b'3'));
+
+                println!("to_upper('{}') = '{}'", 'F', char::from(ascii::to_upper(b'F')));
+                println!("to_upper('{}') = '{}'", 'f', char::from(ascii::to_upper(b'f')));
+                println!("to_upper('{}') = '{}'", '5', char::from(ascii::to_upper(b'5')));
+                println!("to_upper('{}') = '{}'", ',', char::from(ascii::to_upper(b',')));
+                println!("to_lower('{}') = '{}'", 'F', char::from(ascii::to_lower(b'F')));
+                println!("to_lower('{}') = '{}'", 'f', char::from(ascii::to_lower(b'f')));
+
+                println!("parse_u32(\"{}\") = {:?}", "12345", ascii::parse_u32(b"12345"));
+                println!("parse_u32(\"{}\") = {:?}", "00027", ascii::parse_u32(b"00027"));
+                println!("parse_u32(\"{}\") = {:?}", "123ab", ascii::parse_u32(b"123ab"));
+                println!("parse_u32(\"{}\") = {:?}", "abcde", ascii::parse_u32(b"abcde"));
+                println!("parse_u32(\"{}\") = {:?}", "4294967295", ascii::parse_u32(b"4294967295"));
+                println!("parse_u32(\"{}\") = {:?}", "4294967296", ascii::parse_u32(b"4294967296"));
+
+                println!("caesar_encrypt(\"{}\", {}) = \"{}\"",
+                    "Lorem ipsum dolor sit amet",
+                    5,
+                    String::from_utf8(ascii::caesar_encrypt(b"Lorem ipsum dolor sit amet", 5)).unwrap());
+
+                println!("caesar_decrypt(\"{}\", {}) = \"{}\"",
+                    "Qtwjr nuxzr itqtw xny frjy",
+                    5,
+                    String::from_utf8(ascii::caesar_decrypt(b"Qtwjr nuxzr itqtw xny frjy", 5)).unwrap());
             },
             _ => {
                 println!("Unrecognized parameter. Re-run application without arguments to help.");
