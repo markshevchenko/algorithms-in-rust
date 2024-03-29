@@ -72,14 +72,15 @@ pub fn parse_u32(s: &[u8]) -> Option<u32> {
     Some(accumulator)
 }
 
-pub fn caesar_encrypt(s: &[u8], shift: u8) -> Vec<u8> {
+pub fn caesar_encrypt(s: &[u8], key: u8) -> Vec<u8> {
     let mut result = Vec::new();
+    const LETTER_COUNT: u8 = b'Z' - b'A' + 1;
     
     for c in s {
         let out_c = if is_lower(*c) {
-            (*c - b'a' + shift) % 26 + b'a'
+            (*c - b'a' + key) % 26 + b'a'
         } else if is_upper(*c) {
-            (*c - b'A' + shift) % 26 + b'A'
+            (*c - b'A' + key) % 26 + b'A'
         } else {
             *c
         };
