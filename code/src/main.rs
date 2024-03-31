@@ -67,18 +67,9 @@ fn main() {
                 // println!("parse_u32(\"{}\") = {:?}", "4294967295", ascii::parse_u32(b"4294967295"));
                 // println!("parse_u32(\"{}\") = {:?}", "4294967296", ascii::parse_u32(b"4294967296"));
 
-                print!("print_u32({}) = ", 537);
-                ascii::print_u32(537);
-                println!();
-
-                print!("print_u32({}) = ", 12045);
-                ascii::print_u32(12045);
-                println!();
-
-                
-                print!("print_u32({}) = ", 0);
-                ascii::print_u32(0);
-                println!();
+                print!("print_u32({}) = ", 537); ascii::print_u32(537); println!();
+                print!("print_u32({}) = ", 12045); ascii::print_u32(12045); println!();
+                print!("print_u32({}) = ", 0); ascii::print_u32(0);  println!();
 
                 println!("caesar_encrypt(\"{}\", {}) = \"{}\"",
                     "Lorem ipsum dolor sit amet",
