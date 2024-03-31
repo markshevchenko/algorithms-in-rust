@@ -50,26 +50,40 @@ pub fn to_upper(c: u8) -> u8 {
 //     Some(accumulator)
 // }
 
-pub fn parse_u32(s: &[u8]) -> Option<u32> {
-    if s.len() == 0 || !is_digit(s[0]) {
-        return None;
-    }
+// pub fn parse_u32(s: &[u8]) -> Option<u32> {
+//     if s.len() == 0 || !is_digit(s[0]) {
+//         return None;
+//     }
 
-    let mut accumulator: u32 = 0;
-    let mut i = 0;
+//     let mut accumulator: u32 = 0;
+//     let mut i = 0;
 
-    while i < s.len() && is_digit(s[i]) {
-        let next_digit = u32::from(s[i] - b'0');
-        if accumulator > u32::MAX / 10 || 10 * accumulator > u32::MAX - next_digit {
-            return Some(accumulator);
-        }
+//     while i < s.len() && is_digit(s[i]) {
+//         let next_digit = u32::from(s[i] - b'0');
+//         if accumulator > u32::MAX / 10 || 10 * accumulator > u32::MAX - next_digit {
+//             return Some(accumulator);
+//         }
 
-        accumulator = 10 * accumulator + next_digit;
+//         accumulator = 10 * accumulator + next_digit;
         
-        i += 1;
+//         i += 1;
+//     }
+
+//     Some(accumulator)
+// }
+
+pub fn print_u32(value: u32) {
+    if value == 0 {
+        print!("0");
+        
+        return;
     }
 
-    Some(accumulator)
+    if value / 10 != 0 {
+        print_u32(value / 10)
+    }
+
+    print!("{}", value % 10);
 }
 
 pub fn caesar_encrypt(s: &[u8], key: u8) -> Vec<u8> {
@@ -78,9 +92,9 @@ pub fn caesar_encrypt(s: &[u8], key: u8) -> Vec<u8> {
     
     for c in s {
         let out_c = if is_lower(*c) {
-            (*c - b'a' + key) % 26 + b'a'
+            (*c - b'a' + key) % LETTER_COUNT + b'a'
         } else if is_upper(*c) {
-            (*c - b'A' + key) % 26 + b'A'
+            (*c - b'A' + key) % LETTER_COUNT + b'A'
         } else {
             *c
         };
