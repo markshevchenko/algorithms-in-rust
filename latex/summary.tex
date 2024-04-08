@@ -1,7 +1,13 @@
 \documentclass{book}
 \usepackage{fontspec}
+\usepackage[answerdelayed]{exercise}
+\usepackage{listings, listings-rust}
+\counterwithin{Exercise}{section}
 \defaultfontfeatures{Ligatures={TeX}}
 \setmainfont{Liberation Serif}
 \begin{document}
-Проба пера.
+
+\input{00-introduction.tex}
+\input{01-numbers.tex}
+
 \end{document}

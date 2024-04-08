@@ -1,6 +1,6 @@
 ﻿# Введение
 
-Версия {{#include ../../version.md}}.
+Версия {{#include ../../../version.txt}}.
 
 ## История
 
