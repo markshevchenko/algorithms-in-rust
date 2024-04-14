@@ -1,0 +1,28 @@
+\documentclass[a4paper,12pt]{book}
+\usepackage[russian]{babel}
+\usepackage{fontspec}
+\usepackage[answerdelayed]{exercise}
+\usepackage{listings, listings-rust}
+\usepackage[normalem]{ulem}
+\usepackage{hyperref}
+\counterwithin{Exercise}{section}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{Liberation Serif}
+\setcounter{tocdepth}{2}
+\setcounter{chapter}{-1}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Strong}[1]{\textbf{#1}}
+
+\begin{document}
+
+\tableofcontents
+
+\input{00-introduction.tex}
+\input{01-numbers.tex}
+\input{02-ascii.tex}
+
+
+\input{99-bibliography.tex}
+
+\end{document}
