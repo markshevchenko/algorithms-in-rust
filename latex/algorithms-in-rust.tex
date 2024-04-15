@@ -1,18 +1,27 @@
 \documentclass[a4paper,12pt]{book}
+\usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{fontspec}
+\usepackage{unicode-math}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\setmathfont{DejaVu Math TeX Gyre}
 \usepackage[answerdelayed]{exercise}
 \usepackage{listings, listings-rust}
 \usepackage[normalem]{ulem}
 \usepackage{hyperref}
 \counterwithin{Exercise}{section}
-\defaultfontfeatures{Ligatures={TeX}}
-\setmainfont{Liberation Serif}
 \setcounter{tocdepth}{2}
 \setcounter{chapter}{-1}
 
-\newcommand{\code}[1]{\texttt{#1}}
-\newcommand{\Strong}[1]{\textbf{#1}}
+\lstnewenvironment{Rust}[1][]
+  {\lstset{language=Rust,basicstyle=\normalsize\ttfamily,#1}}
+  {}
+
+\renewcommand{\strong}[1]{\textbf{#1}}
+\renewcommand{\c}[1]{\texttt{#1}}
 
 \begin{document}
 
