@@ -1,3 +1,4 @@
 # Алгоритмы на Rust
 
-[pdf](https://github.com/user-attachments/files/17268523/algorithms-in-rust.pdf)
+[Текущая версия книги в формате PDF](https://github.com/user-attachments/files/17578299/algorithms-in-rust.pdf)
+
